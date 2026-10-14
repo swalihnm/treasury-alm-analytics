@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "treasury_alm"
+version = "0.1.0"
+description = "Treasury ALM analytics: deposit betas, NII forecasting, Basel IRRBB, NII-at-Risk"
+requires-python = ">=3.11"
+dependencies = [
+  "polars>=1.0", "pandas>=2.2", "numpy>=1.26", "scipy>=1.11", "statsmodels>=0.14",
+  "scikit-learn>=1.4", "lightgbm>=4.0", "tensorflow>=2.16", "fredapi>=0.5", "pandera>=0.20",
+  "ruptures>=1.1", "mlflow>=2.10", "pyyaml>=6", "pydantic>=2", "typer>=0.12", "fastapi>=0.110",
+  "uvicorn>=0.27", "streamlit>=1.32", "matplotlib>=3.8", "pyarrow>=15",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "hypothesis", "ruff", "mypy", "httpx", "types-PyYAML"]
+
+[project.scripts]
+alm = "treasury_alm.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+treasury_alm = ["py.typed"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E741", "B905"]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+files = ["src/treasury_alm"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["slow: slow tests"]
+
+[tool.coverage.run]
+source = ["treasury_alm"]

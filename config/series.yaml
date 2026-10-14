@@ -1,0 +1,8 @@
+# FRED series used by the project (see spec section 3)
+rates_monthly: [FEDFUNDS, GS1M, TB3MS, GS1, GS2, GS3, GS5, GS7, GS10, GS20, GS30]
+rates_daily: [SOFR, DGS3MO, DGS2, DGS10]
+deposit_rates_new: [SNDR, NDR12MCD]          # monthly, Apr 2021 -> (FDIC methodology B)
+deposit_rates_old: [SAVNRNJ, MMNRNJ, CD12NRNJ] # weekly, May 2009 -> Mar 2021 (methodology A)
+deposits_monthly: [DPSACBM027SBOG]
+deposits_weekly: [DPSACBW027SBOG, DPSLCBW027SBOG, DPSSCBW027SBOG]
+bank_income: [QBPQYNTIY, QBPQYTIY, QBPBSTAS, USNIM]
