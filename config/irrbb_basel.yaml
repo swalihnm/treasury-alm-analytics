@@ -1,0 +1,33 @@
+# Basel IRRBB standardised framework parameters.
+# Verified 2026-10-14 against Basel Framework SRP31 (in force 2026-01-01, published 2024-07-16):
+#   https://www.bis.org/basel_framework/chapter/SRP/31.htm
+time_buckets:   # SRP31.96 Table 3: bucket upper bound (years) and midpoint (years)
+  upper:     [0.0028, 0.0833, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0, 1000.0]
+  midpoints: [0.0028, 0.0417, 0.1667, 0.375, 0.625, 0.875, 1.25, 1.75, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 12.5, 17.5, 25.0]
+shock_sizes_bp:  # SRP31.90 Table 2
+  USD: {parallel: 200, short: 300, long: 225}
+  GBP: {parallel: 275, short: 425, long: 250}
+  EUR: {parallel: 225, short: 350, long: 200}
+  HKD: {parallel: 225, short: 375, long: 200}
+  INR: {parallel: 325, short: 475, long: 225}
+shock_shape:     # SRP31.91 with decay parameter x = 4 years
+  decay_x: 4.0
+  # short(t) = R_short * exp(-t/x); long(t) = R_long * (1 - exp(-t/x))
+  # steepener(t) = -0.65*|R_short|*S_short(t) + 0.9*|R_long|*S_long(t)
+  # flattener(t) =  0.80*|R_short|*S_short(t) - 0.6*|R_long|*S_long(t)
+  # (coefficients reproduce the SRP31.92 worked example: +25.4bp / -1.6bp at t = 3.5y, 100bp shocks)
+  steepener: {short: -0.65, long: 0.90}
+  flattener: {short: 0.80, long: -0.60}
+rate_floor:      # SRP31.93: national discretion, floor must be <= 0
+  mode: maturity_dependent   # none | zero | maturity_dependent
+  # ASSUMPTION (not from the Basel text, which only requires floor <= 0): floor of -1.00% at t=0
+  # rising linearly to 0% at 20 years. Documented in docs/assumptions_register.md.
+  immediate_floor_pct: -1.00
+  floor_end_years: 20.0
+core_deposit_caps:  # SRP31.112 Table 4
+  retail_transactional:     {max_core: 0.90, max_avg_maturity_years: 5.0}
+  retail_non_transactional: {max_core: 0.70, max_avg_maturity_years: 4.5}
+  wholesale:                {max_core: 0.50, max_avg_maturity_years: 4.0}
+outlier_test:    # SRP31.82
+  threshold_pct_of_tier1: 15.0
+nii_scenarios: [parallel_up, parallel_down]   # SRP31.90: two prescribed NII scenarios

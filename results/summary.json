@@ -2227,5 +2227,1330 @@
         }
       }
     }
+  },
+  "irrbb": {
+    "base_eve_bn": 5.999999999999474,
+    "base_nii_bn": 3.4843186205158565,
+    "by_currency": {
+      "EUR": {
+        "base_eve_bn": 5.999999999999474,
+        "base_nii_bn": 3.4843186205158565,
+        "currency": "EUR",
+        "eve": {
+          "flattener": {
+            "delta_eve_bn": 1.913322309916726,
+            "pct_of_base_eve": 31.88870516528156,
+            "pct_of_tier1": 21.25913677685251
+          },
+          "parallel_down": {
+            "delta_eve_bn": 2.6375912640981873,
+            "pct_of_base_eve": 43.959854401640314,
+            "pct_of_tier1": 29.30656960109097
+          },
+          "parallel_up": {
+            "delta_eve_bn": -4.138949603374886,
+            "pct_of_base_eve": -68.98249338958748,
+            "pct_of_tier1": -45.988328926387624
+          },
+          "short_down": {
+            "delta_eve_bn": 0.48075274894160813,
+            "pct_of_base_eve": 8.012545815694171,
+            "pct_of_tier1": 5.341697210462312
+          },
+          "short_up": {
+            "delta_eve_bn": -0.5282627756362217,
+            "pct_of_base_eve": -8.8043795939378,
+            "pct_of_tier1": -5.869586395958019
+          },
+          "steepener": {
+            "delta_eve_bn": -2.8961454057969043,
+            "pct_of_base_eve": -48.2690900966193,
+            "pct_of_tier1": -32.17939339774338
+          }
+        },
+        "nii": {
+          "parallel_down": {
+            "delta_nii_bn": -0.48260223615527575,
+            "pct_of_base_nii": -13.850691877421534,
+            "pct_of_tier1": -5.362247068391953
+          },
+          "parallel_up": {
+            "delta_nii_bn": 0.3914509047567627,
+            "pct_of_base_nii": 11.23464721199372,
+            "pct_of_tier1": 4.349454497297363
+          }
+        },
+        "outlier_test": {
+          "is_outlier": true,
+          "threshold_pct_tier1": 15.0,
+          "worst_loss_pct_tier1": 45.988328926387624
+        },
+        "tier1_bn": 9.0,
+        "worst_delta_eve_pct_tier1": -45.988328926387624,
+        "worst_scenario": "parallel_up"
+      },
+      "GBP": {
+        "base_eve_bn": 5.999999999999474,
+        "base_nii_bn": 3.4843186205158565,
+        "currency": "GBP",
+        "eve": {
+          "flattener": {
+            "delta_eve_bn": 2.2917533969837596,
+            "pct_of_base_eve": 38.195889949732674,
+            "pct_of_tier1": 25.463926633152884
+          },
+          "parallel_down": {
+            "delta_eve_bn": 2.2864927603033998,
+            "pct_of_base_eve": 38.10821267172667,
+            "pct_of_tier1": 25.405475114482222
+          },
+          "parallel_up": {
+            "delta_eve_bn": -4.893152268326265,
+            "pct_of_base_eve": -81.5525378054449,
+            "pct_of_tier1": -54.368358536958496
+          },
+          "short_down": {
+            "delta_eve_bn": 0.5891746569959686,
+            "pct_of_base_eve": 9.819577616600338,
+            "pct_of_tier1": 6.546385077732984
+          },
+          "short_up": {
+            "delta_eve_bn": -0.6376543616971055,
+            "pct_of_base_eve": -10.62757269495269,
+            "pct_of_tier1": -7.085048463301173
+          },
+          "steepener": {
+            "delta_eve_bn": -3.520211164910588,
+            "pct_of_base_eve": -58.67018608184828,
+            "pct_of_tier1": -39.11345738789542
+          }
+        },
+        "nii": {
+          "parallel_down": {
+            "delta_nii_bn": -0.6141390576781713,
+            "pct_of_base_nii": -17.62580075375677,
+            "pct_of_tier1": -6.823767307535237
+          },
+          "parallel_up": {
+            "delta_nii_bn": 0.4785522921169605,
+            "pct_of_base_nii": 13.734458418906316,
+            "pct_of_tier1": 5.31724769018845
+          }
+        },
+        "outlier_test": {
+          "is_outlier": true,
+          "threshold_pct_tier1": 15.0,
+          "worst_loss_pct_tier1": 54.368358536958496
+        },
+        "tier1_bn": 9.0,
+        "worst_delta_eve_pct_tier1": -54.368358536958496,
+        "worst_scenario": "parallel_up"
+      },
+      "HKD": {
+        "base_eve_bn": 5.999999999999474,
+        "base_nii_bn": 3.4843186205158565,
+        "currency": "HKD",
+        "eve": {
+          "flattener": {
+            "delta_eve_bn": 1.8865709433528615,
+            "pct_of_base_eve": 31.442849055883784,
+            "pct_of_tier1": 20.96189937058735
+          },
+          "parallel_down": {
+            "delta_eve_bn": 2.6375912640981873,
+            "pct_of_base_eve": 43.959854401640314,
+            "pct_of_tier1": 29.30656960109097
+          },
+          "parallel_up": {
+            "delta_eve_bn": -4.138949603374886,
+            "pct_of_base_eve": -68.98249338958748,
+            "pct_of_tier1": -45.988328926387624
+          },
+          "short_down": {
+            "delta_eve_bn": 0.5166495612304942,
+            "pct_of_base_eve": 8.610826020508991,
+            "pct_of_tier1": 5.740550680338824
+          },
+          "short_up": {
+            "delta_eve_bn": -0.5648631848316068,
+            "pct_of_base_eve": -9.414386413860939,
+            "pct_of_tier1": -6.2762576092400755
+          },
+          "steepener": {
+            "delta_eve_bn": -2.877064150819315,
+            "pct_of_base_eve": -47.951069180326115,
+            "pct_of_tier1": -31.96737945354794
+          }
+        },
+        "nii": {
+          "parallel_down": {
+            "delta_nii_bn": -0.48260223615527575,
+            "pct_of_base_nii": -13.850691877421534,
+            "pct_of_tier1": -5.362247068391953
+          },
+          "parallel_up": {
+            "delta_nii_bn": 0.3914509047567627,
+            "pct_of_base_nii": 11.23464721199372,
+            "pct_of_tier1": 4.349454497297363
+          }
+        },
+        "outlier_test": {
+          "is_outlier": true,
+          "threshold_pct_tier1": 15.0,
+          "worst_loss_pct_tier1": 45.988328926387624
+        },
+        "tier1_bn": 9.0,
+        "worst_delta_eve_pct_tier1": -45.988328926387624,
+        "worst_scenario": "parallel_up"
+      },
+      "INR": {
+        "base_eve_bn": 5.999999999999474,
+        "base_nii_bn": 3.4843186205158565,
+        "currency": "INR",
+        "eve": {
+          "flattener": {
+            "delta_eve_bn": 2.029575367142762,
+            "pct_of_base_eve": 33.826256119049,
+            "pct_of_tier1": 22.550837412697355
+          },
+          "parallel_down": {
+            "delta_eve_bn": 2.1500820711389963,
+            "pct_of_base_eve": 35.83470118565308,
+            "pct_of_tier1": 23.88980079043329
+          },
+          "parallel_up": {
+            "delta_eve_bn": -5.597706837348818,
+            "pct_of_base_eve": -93.2951139558218,
+            "pct_of_tier1": -62.19674263720909
+          },
+          "short_down": {
+            "delta_eve_bn": 0.662725353201818,
+            "pct_of_base_eve": 11.045422553364602,
+            "pct_of_tier1": 7.363615035575756
+          },
+          "short_up": {
+            "delta_eve_bn": -0.7099131476161613,
+            "pct_of_base_eve": -11.831885793603726,
+            "pct_of_tier1": -7.887923862401793
+          },
+          "steepener": {
+            "delta_eve_bn": -3.147339305643154,
+            "pct_of_base_eve": -52.455655094057164,
+            "pct_of_tier1": -34.97043672936838
+          }
+        },
+        "nii": {
+          "parallel_down": {
+            "delta_nii_bn": -0.753022409200153,
+            "pct_of_base_nii": -21.611755158277326,
+            "pct_of_tier1": -8.366915657779478
+          },
+          "parallel_up": {
+            "delta_nii_bn": 0.5656592094987944,
+            "pct_of_base_nii": 16.2344283375281,
+            "pct_of_tier1": 6.285102327764382
+          }
+        },
+        "outlier_test": {
+          "is_outlier": true,
+          "threshold_pct_tier1": 15.0,
+          "worst_loss_pct_tier1": 62.19674263720909
+        },
+        "tier1_bn": 9.0,
+        "worst_delta_eve_pct_tier1": -62.19674263720909,
+        "worst_scenario": "parallel_up"
+      },
+      "USD": {
+        "base_eve_bn": 5.999999999999474,
+        "base_nii_bn": 3.4843186205158565,
+        "currency": "USD",
+        "eve": {
+          "flattener": {
+            "delta_eve_bn": 2.20125433519787,
+            "pct_of_base_eve": 36.68757225330105,
+            "pct_of_tier1": 24.458381502198556
+          },
+          "parallel_down": {
+            "delta_eve_bn": 2.8014777617598945,
+            "pct_of_base_eve": 46.69129602933567,
+            "pct_of_tier1": 31.12753068622105
+          },
+          "parallel_up": {
+            "delta_eve_bn": -3.7418519272774056,
+            "pct_of_base_eve": -62.36419878796222,
+            "pct_of_tier1": -41.57613252530451
+          },
+          "short_down": {
+            "delta_eve_bn": 0.4096551069812442,
+            "pct_of_base_eve": 6.827585116354668,
+            "pct_of_tier1": 4.551723410902714
+          },
+          "short_up": {
+            "delta_eve_bn": -0.4546411669754278,
+            "pct_of_base_eve": -7.577352782924461,
+            "pct_of_tier1": -5.051568521949197
+          },
+          "steepener": {
+            "delta_eve_bn": -3.2791936674259254,
+            "pct_of_base_eve": -54.65322779043688,
+            "pct_of_tier1": -36.435485193621396
+          }
+        },
+        "nii": {
+          "parallel_down": {
+            "delta_nii_bn": -0.42205389729556675,
+            "pct_of_base_nii": -12.112953586118403,
+            "pct_of_tier1": -4.689487747728519
+          },
+          "parallel_up": {
+            "delta_nii_bn": 0.3479042435819908,
+            "pct_of_base_nii": 9.984857341504641,
+            "pct_of_tier1": 3.865602706466564
+          }
+        },
+        "outlier_test": {
+          "is_outlier": true,
+          "threshold_pct_tier1": 15.0,
+          "worst_loss_pct_tier1": 41.57613252530451
+        },
+        "tier1_bn": 9.0,
+        "worst_delta_eve_pct_tier1": -41.57613252530451,
+        "worst_scenario": "parallel_up"
+      }
+    },
+    "currency": "USD",
+    "curve_asof": "2026-09-01",
+    "eve": {
+      "flattener": {
+        "delta_eve_bn": 2.20125433519787,
+        "pct_of_base_eve": 36.68757225330105,
+        "pct_of_tier1": 24.458381502198556
+      },
+      "parallel_down": {
+        "delta_eve_bn": 2.8014777617598945,
+        "pct_of_base_eve": 46.69129602933567,
+        "pct_of_tier1": 31.12753068622105
+      },
+      "parallel_up": {
+        "delta_eve_bn": -3.7418519272774056,
+        "pct_of_base_eve": -62.36419878796222,
+        "pct_of_tier1": -41.57613252530451
+      },
+      "short_down": {
+        "delta_eve_bn": 0.4096551069812442,
+        "pct_of_base_eve": 6.827585116354668,
+        "pct_of_tier1": 4.551723410902714
+      },
+      "short_up": {
+        "delta_eve_bn": -0.4546411669754278,
+        "pct_of_base_eve": -7.577352782924461,
+        "pct_of_tier1": -5.051568521949197
+      },
+      "steepener": {
+        "delta_eve_bn": -3.2791936674259254,
+        "pct_of_base_eve": -54.65322779043688,
+        "pct_of_tier1": -36.435485193621396
+      }
+    },
+    "gap_table": [
+      {
+        "assets": 8.0,
+        "bucket": 1,
+        "cumulative_gap": -12.399999999999999,
+        "gap": -12.399999999999999,
+        "liabilities": 20.4,
+        "midpoint_years": 0.0028
+      },
+      {
+        "assets": 0.0,
+        "bucket": 2,
+        "cumulative_gap": -12.399999999999999,
+        "gap": 0.0,
+        "liabilities": 0.0,
+        "midpoint_years": 0.0417
+      },
+      {
+        "assets": 27.000622810566508,
+        "bucket": 3,
+        "cumulative_gap": -6.7743771894334905,
+        "gap": 5.625622810566508,
+        "liabilities": 21.375,
+        "midpoint_years": 0.1667
+      },
+      {
+        "assets": 1.9656716314353844,
+        "bucket": 4,
+        "cumulative_gap": -10.183705557998106,
+        "gap": -3.4093283685646156,
+        "liabilities": 5.375,
+        "midpoint_years": 0.375
+      },
+      {
+        "assets": 1.9315987063547202,
+        "bucket": 5,
+        "cumulative_gap": -13.627106851643386,
+        "gap": -3.44340129364528,
+        "liabilities": 5.375,
+        "midpoint_years": 0.625
+      },
+      {
+        "assets": 1.8983816577198391,
+        "bucket": 6,
+        "cumulative_gap": -17.103725193923548,
+        "gap": -3.476618342280161,
+        "liabilities": 5.375,
+        "midpoint_years": 0.875
+      },
+      {
+        "assets": 3.700427227507793,
+        "bucket": 7,
+        "cumulative_gap": -16.153297966415757,
+        "gap": 0.950427227507793,
+        "liabilities": 2.75,
+        "midpoint_years": 1.25
+      },
+      {
+        "assets": 3.5772950634169773,
+        "bucket": 8,
+        "cumulative_gap": -15.326002902998779,
+        "gap": 0.8272950634169773,
+        "liabilities": 2.75,
+        "midpoint_years": 1.75
+      },
+      {
+        "assets": 6.809280394063659,
+        "bucket": 9,
+        "cumulative_gap": -14.01672250893512,
+        "gap": 1.3092803940636593,
+        "liabilities": 5.5,
+        "midpoint_years": 2.5
+      },
+      {
+        "assets": 6.386041323039436,
+        "bucket": 10,
+        "cumulative_gap": -13.130681185895684,
+        "gap": 0.8860413230394357,
+        "liabilities": 5.5,
+        "midpoint_years": 3.5
+      },
+      {
+        "assets": 2.6406994107866213,
+        "bucket": 11,
+        "cumulative_gap": -14.989981775109062,
+        "gap": -1.8593005892133787,
+        "liabilities": 4.5,
+        "midpoint_years": 4.5
+      },
+      {
+        "assets": 2.576088362222962,
+        "bucket": 12,
+        "cumulative_gap": -16.9138934128861,
+        "gap": -1.9239116377770382,
+        "liabilities": 4.5,
+        "midpoint_years": 5.5
+      },
+      {
+        "assets": 2.5142727146820536,
+        "bucket": 13,
+        "cumulative_gap": -16.199620698204047,
+        "gap": 0.714272714682054,
+        "liabilities": 1.7999999999999996,
+        "midpoint_years": 6.5
+      },
+      {
+        "assets": 2.4551326172490913,
+        "bucket": 14,
+        "cumulative_gap": -15.544488080954956,
+        "gap": 0.6551326172490917,
+        "liabilities": 1.7999999999999996,
+        "midpoint_years": 7.5
+      },
+      {
+        "assets": 2.3985533640847345,
+        "bucket": 15,
+        "cumulative_gap": -13.145934716870222,
+        "gap": 2.3985533640847345,
+        "liabilities": 0.0,
+        "midpoint_years": 8.5
+      },
+      {
+        "assets": 2.344425173591979,
+        "bucket": 16,
+        "cumulative_gap": -10.801509543278243,
+        "gap": 2.344425173591979,
+        "liabilities": 0.0,
+        "midpoint_years": 9.5
+      },
+      {
+        "assets": 6.988882633647756,
+        "bucket": 17,
+        "cumulative_gap": -3.8126269096304872,
+        "gap": 6.988882633647756,
+        "liabilities": 0.0,
+        "midpoint_years": 12.5
+      },
+      {
+        "assets": 5.947915028277006,
+        "bucket": 18,
+        "cumulative_gap": 2.1352881186465185,
+        "gap": 5.947915028277006,
+        "liabilities": 0.0,
+        "midpoint_years": 17.5
+      },
+      {
+        "assets": 3.864711881353486,
+        "bucket": 19,
+        "cumulative_gap": 6.000000000000004,
+        "gap": 3.864711881353486,
+        "liabilities": 0.0,
+        "midpoint_years": 25.0
+      }
+    ],
+    "label": "Illustrative bank (assumptions, not data)",
+    "most_sensitive_assumption_eve": "core maturity",
+    "most_sensitive_assumption_nii": "deposit beta",
+    "nii": {
+      "parallel_down": {
+        "delta_nii_bn": -0.42205389729556675,
+        "pct_of_base_nii": -12.112953586118403,
+        "pct_of_tier1": -4.689487747728519
+      },
+      "parallel_up": {
+        "delta_nii_bn": 0.3479042435819908,
+        "pct_of_base_nii": 9.984857341504641,
+        "pct_of_tier1": 3.865602706466564
+      }
+    },
+    "nii_breakdown_base": {
+      "agency_10y": 0.22069071572112994,
+      "cash": 0.29494049763147334,
+      "commercial_floating": 1.484189055098354,
+      "consumer": 0.8640000000000001,
+      "mortgages": 1.5121770038366353,
+      "retail_non_transactional": -0.12149999999999998,
+      "retail_transactional": -0.009000000000000001,
+      "term_deposits": -0.272,
+      "ust_2y": 0.1856638625530177,
+      "ust_5y": 0.3151558956203289,
+      "wholesale_funding": -0.6899984099450825,
+      "wholesale_nmd": -0.30000000000000004
+    },
+    "outlier_test": {
+      "is_outlier": true,
+      "threshold_pct_tier1": 15.0,
+      "worst_loss_pct_tier1": 41.57613252530451
+    },
+    "sensitivity": [
+      {
+        "assumption": "deposit beta",
+        "case": "deposit beta x0.5",
+        "eve_swing_vs_base_pp": 0.5852274510841013,
+        "nii_parallel_down_pct": -12.654761530422501,
+        "nii_parallel_up_pct": 11.440700419231863,
+        "nii_swing_up_pp": 1.4558430777272218,
+        "worst_eve_pct_tier1": -40.99090507422041,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "deposit beta",
+        "case": "deposit beta x2.0",
+        "eve_swing_vs_base_pp": -1.1704549021681956,
+        "nii_parallel_down_pct": -11.02933769751016,
+        "nii_parallel_up_pct": 7.073171186050252,
+        "nii_swing_up_pp": -2.9116861554543894,
+        "worst_eve_pct_tier1": -42.746587427472704,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "core share",
+        "case": "core share -10pp",
+        "eve_swing_vs_base_pp": -3.4192997605715263,
+        "nii_parallel_down_pct": -12.112953586118403,
+        "nii_parallel_up_pct": 9.984857341504641,
+        "nii_swing_up_pp": 0.0,
+        "worst_eve_pct_tier1": -44.995432285876035,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "core share",
+        "case": "core share +10pp",
+        "eve_swing_vs_base_pp": 3.419299626315187,
+        "nii_parallel_down_pct": -12.112953586118403,
+        "nii_parallel_up_pct": 9.984857341504641,
+        "nii_swing_up_pp": 0.0,
+        "worst_eve_pct_tier1": -38.15683289898932,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "core maturity",
+        "case": "core maturity -1y",
+        "eve_swing_vs_base_pp": -6.5886611599851435,
+        "nii_parallel_down_pct": -12.112953586118403,
+        "nii_parallel_up_pct": 9.984857341504641,
+        "nii_swing_up_pp": 0.0,
+        "worst_eve_pct_tier1": -48.16479368528965,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "core maturity",
+        "case": "core maturity +1y",
+        "eve_swing_vs_base_pp": 6.3621399862776045,
+        "nii_parallel_down_pct": -12.112953586118403,
+        "nii_parallel_up_pct": 9.984857341504641,
+        "nii_swing_up_pp": 0.0,
+        "worst_eve_pct_tier1": -35.213992539026904,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "prepayment speed",
+        "case": "mortgage CPR x0.5",
+        "eve_swing_vs_base_pp": -6.125461397162091,
+        "nii_parallel_down_pct": -11.684869238320017,
+        "nii_parallel_up_pct": 9.707102529820983,
+        "nii_swing_up_pp": -0.2777548116836588,
+        "worst_eve_pct_tier1": -47.7015939224666,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "prepayment speed",
+        "case": "mortgage CPR x1.5",
+        "eve_swing_vs_base_pp": 5.1122539124618385,
+        "nii_parallel_down_pct": -12.550015310882587,
+        "nii_parallel_up_pct": 10.265900414589215,
+        "nii_swing_up_pp": 0.28104307308457344,
+        "worst_eve_pct_tier1": -36.46387861284267,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "deposit lag",
+        "case": "deposit lag 1m",
+        "eve_swing_vs_base_pp": 0.0,
+        "nii_parallel_down_pct": -11.97497451774711,
+        "nii_parallel_up_pct": 9.605222255207114,
+        "nii_swing_up_pp": -0.37963508629752774,
+        "worst_eve_pct_tier1": -41.57613252530451,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "deposit lag",
+        "case": "deposit lag 6m",
+        "eve_swing_vs_base_pp": 0.0,
+        "nii_parallel_down_pct": -12.279028412791202,
+        "nii_parallel_up_pct": 10.441794990816296,
+        "nii_swing_up_pp": 0.45693764931165504,
+        "worst_eve_pct_tier1": -41.57613252530451,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "rate floor",
+        "case": "floor: none",
+        "eve_swing_vs_base_pp": 0.0,
+        "nii_parallel_down_pct": -12.112953586118403,
+        "nii_parallel_up_pct": 9.984857341504641,
+        "nii_swing_up_pp": 0.0,
+        "worst_eve_pct_tier1": -41.57613252530451,
+        "worst_scenario": "parallel_up"
+      },
+      {
+        "assumption": "rate floor",
+        "case": "floor: zero",
+        "eve_swing_vs_base_pp": 0.0,
+        "nii_parallel_down_pct": -12.112953586118403,
+        "nii_parallel_up_pct": 9.984857341504641,
+        "nii_swing_up_pp": 0.0,
+        "worst_eve_pct_tier1": -41.57613252530451,
+        "worst_scenario": "parallel_up"
+      }
+    ],
+    "sensitivity_max_nii_swing_by_assumption_pp": {
+      "core maturity": 0.0,
+      "core share": 0.0,
+      "deposit beta": 2.9116861554543894,
+      "deposit lag": 0.45693764931165504,
+      "prepayment speed": 0.28104307308457344,
+      "rate floor": 0.0
+    },
+    "sensitivity_max_swing_by_assumption_pp": {
+      "core maturity": 6.5886611599851435,
+      "core share": 3.4192997605715263,
+      "deposit beta": 1.1704549021681956,
+      "deposit lag": 0.0,
+      "prepayment speed": 6.125461397162091,
+      "rate floor": 0.0
+    },
+    "spreads_pct": {
+      "agency_10y": -0.6599121743037651,
+      "cash": -3.9844195155416777,
+      "commercial_floating": -0.9462079932610291,
+      "consumer": 2.733212210886371,
+      "mortgages": -0.1738319255607368,
+      "retail_non_transactional": -4.236143655411437,
+      "retail_transactional": -4.7119633819908655,
+      "term_deposits": -2.3046347611402735,
+      "ust_2y": -0.9344329983700299,
+      "ust_5y": -0.8814299988500581,
+      "wholesale_funding": 2.526151290239571,
+      "wholesale_nmd": -1.550806949860475
+    },
+    "tier1_bn": 9.0,
+    "worst_delta_eve_pct_tier1": -41.57613252530451,
+    "worst_scenario": "parallel_up"
+  },
+  "monte_carlo": {
+    "antithetic": true,
+    "calibration": {
+      "alt_pre_gfc": {
+        "a": 0.19534679298362506,
+        "end": "2007-12-01",
+        "half_life_years": 3.5482905553409743,
+        "long_run_mean_pct": 2.775963494800025,
+        "n_obs": 215,
+        "phi": 0.9838528857926955,
+        "phi_se": 0.007960694103736166,
+        "resid_excess_kurtosis": 1.5947797853703571,
+        "resid_jarque_bera_p": 2.2031027365769976e-11,
+        "sigma": 0.0068662009880744715,
+        "sigma_bp_per_sqrt_year": 68.66200988074472,
+        "start": "1990-01-01"
+      },
+      "main": {
+        "a": 0.10861518798278663,
+        "end": "2026-09-01",
+        "half_life_years": 6.381678229657858,
+        "long_run_mean_pct": 1.7959649987864428,
+        "n_obs": 440,
+        "phi": 0.9909895737308821,
+        "phi_se": 0.0040516021478453085,
+        "resid_excess_kurtosis": 7.353440790172527,
+        "resid_jarque_bera_p": 1.2406233238922155e-239,
+        "sigma": 0.006476070047072181,
+        "sigma_bp_per_sqrt_year": 64.7607004707218,
+        "start": "1990-01-01"
+      }
+    },
+    "convergence": [
+      {
+        "EaR95_cum3y_pct": 5.4371170997981855,
+        "EaR95_year1_pct": 3.2062254832109836,
+        "EaR99_cum3y_pct": 7.0345179644881926,
+        "EaR99_year1_pct": 4.400829933889396,
+        "n_paths": 500
+      },
+      {
+        "EaR95_cum3y_pct": 5.33488964215926,
+        "EaR95_year1_pct": 3.171957719354606,
+        "EaR99_cum3y_pct": 7.10649447315307,
+        "EaR99_year1_pct": 4.400829933889396,
+        "n_paths": 1000
+      },
+      {
+        "EaR95_cum3y_pct": 5.264174519652668,
+        "EaR95_year1_pct": 3.273440445199194,
+        "EaR99_cum3y_pct": 7.108382692135142,
+        "EaR99_year1_pct": 4.433677059614089,
+        "n_paths": 2000
+      },
+      {
+        "EaR95_cum3y_pct": 5.364225266417485,
+        "EaR95_year1_pct": 3.2947732939745764,
+        "EaR99_cum3y_pct": 7.534019768842141,
+        "EaR99_year1_pct": 4.6799774164941095,
+        "n_paths": 4000
+      },
+      {
+        "EaR95_cum3y_pct": 5.366014470331943,
+        "EaR95_year1_pct": 3.273650846221504,
+        "EaR99_cum3y_pct": 7.723264985280489,
+        "EaR99_year1_pct": 4.60201929070142,
+        "n_paths": 6000
+      },
+      {
+        "EaR95_cum3y_pct": 5.400385963064665,
+        "EaR95_year1_pct": 3.2752699905522973,
+        "EaR99_cum3y_pct": 7.732316817726635,
+        "EaR99_year1_pct": 4.611884108324954,
+        "n_paths": 8000
+      },
+      {
+        "EaR95_cum3y_pct": 5.408243199282112,
+        "EaR95_year1_pct": 3.2813079900623587,
+        "EaR99_cum3y_pct": 7.689728008980996,
+        "EaR99_year1_pct": 4.650788983810127,
+        "n_paths": 10000
+      }
+    ],
+    "deposit_arx": {
+      "coef": {
+        "const": 0.410977998627814,
+        "dff3_l1": -0.024680921649401513,
+        "g_l1": 0.26384231958947935,
+        "slope_l1": -0.011448209438935111
+      },
+      "ff_hist": [
+        3.63,
+        3.63,
+        3.75
+      ],
+      "g_last": 0.4807357853866989,
+      "n": 602,
+      "r2": 0.07239536280603431,
+      "sample": "1976-08-01..2026-09-01",
+      "se": {
+        "const": 0.06725549702131808,
+        "dff3_l1": 0.02558624838969824,
+        "g_l1": 0.1274177849602236,
+        "slope_l1": 0.02469298175563239
+      },
+      "sigma": 0.5851134043290929
+    },
+    "ear95_year1_bootstrap_se_bn": 0.001363446715989458,
+    "hull_white": {
+      "deposit_deviation_pct_y3": {
+        "mean": 0.11412398935237902,
+        "p05": -7.543767860352331,
+        "p95": 8.159285453101091
+      },
+      "ear": {
+        "cumulative_3y": {
+          "EaR95_bn": 0.5878478095284301,
+          "EaR95_pct_base": 5.408243199282112,
+          "EaR99_bn": 0.8358333010151853,
+          "EaR99_pct_base": 7.689728008980996,
+          "base_bn": 10.869478088678791,
+          "mean_bn": 10.86859311440239,
+          "p01_bn": 10.033644787663606,
+          "p05_bn": 10.281630279150361,
+          "p50_bn": 10.854701158477257,
+          "p95_bn": 11.499377596358554,
+          "prob_below_base_pct": 51.82,
+          "std_bn": 0.3726791392552398
+        },
+        "year1": {
+          "EaR95_bn": 0.1158941366785129,
+          "EaR95_pct_base": 3.2813079900623587,
+          "EaR99_bn": 0.16426351192420974,
+          "EaR99_pct_base": 4.650788983810127,
+          "base_bn": 3.531949363775219,
+          "mean_bn": 3.531086286194483,
+          "p01_bn": 3.367685851851009,
+          "p05_bn": 3.416055227096706,
+          "p50_bn": 3.5295641282092562,
+          "p95_bn": 3.651540284971322,
+          "prob_below_base_pct": 51.25999999999999,
+          "std_bn": 0.07079717983622297
+        },
+        "year2": {
+          "EaR95_bn": 0.21679320377005906,
+          "EaR95_pct_base": 5.949227035190736,
+          "EaR99_bn": 0.30602689074429446,
+          "EaR99_pct_base": 8.397972908054609,
+          "base_bn": 3.6440566562292664,
+          "mean_bn": 3.6441700926438,
+          "p01_bn": 3.338029765484972,
+          "p05_bn": 3.4272634524592074,
+          "p50_bn": 3.6381287660535917,
+          "p95_bn": 3.8809732561995487,
+          "prob_below_base_pct": 51.74999999999999,
+          "std_bn": 0.13834936956003618
+        },
+        "year3": {
+          "EaR95_bn": 0.29997759860520423,
+          "EaR95_pct_base": 8.121832060121003,
+          "EaR99_bn": 0.42051123639776566,
+          "EaR99_pct_base": 11.38525562340855,
+          "base_bn": 3.6934720686743066,
+          "mean_bn": 3.693336735564108,
+          "p01_bn": 3.272960832276541,
+          "p05_bn": 3.3934944700691023,
+          "p50_bn": 3.6845499750374175,
+          "p95_bn": 4.020905138761289,
+          "prob_below_base_pct": 51.89,
+          "std_bn": 0.19298873346792553
+        }
+      },
+      "label": "Hull-White (1990-2026 calibration)",
+      "params": {
+        "a": 0.10861518798278663,
+        "end": "2026-09-01",
+        "half_life_years": 6.381678229657858,
+        "long_run_mean_pct": 1.7959649987864428,
+        "n_obs": 440,
+        "phi": 0.9909895737308821,
+        "phi_se": 0.0040516021478453085,
+        "resid_excess_kurtosis": 7.353440790172527,
+        "resid_jarque_bera_p": 1.2406233238922155e-239,
+        "sigma": 0.006476070047072181,
+        "sigma_bp_per_sqrt_year": 64.7607004707218,
+        "start": "1990-01-01"
+      },
+      "short_rate_pct": {
+        "mean_by_year": [
+          4.7778885849184025,
+          4.903957935614385,
+          4.857217536097272
+        ],
+        "p05_y3": 3.2638933699610377,
+        "p95_y3": 6.450541702233507,
+        "share_negative_rates_pct": 0.0
+      }
+    },
+    "hull_white_alt_calibration": {
+      "deposit_deviation_pct_y3": {
+        "mean": 0.11415176051269102,
+        "p05": -7.528563416762133,
+        "p95": 8.141501525203585
+      },
+      "ear": {
+        "cumulative_3y": {
+          "EaR95_bn": 0.5614525004500663,
+          "EaR95_pct_base": 5.165687630619896,
+          "EaR99_bn": 0.7914982937224977,
+          "EaR99_pct_base": 7.282241939009208,
+          "base_bn": 10.868882143047635,
+          "mean_bn": 10.868330827844014,
+          "p01_bn": 10.077383849325138,
+          "p05_bn": 10.307429642597569,
+          "p50_bn": 10.852659809340492,
+          "p95_bn": 11.46952777097378,
+          "prob_below_base_pct": 51.849999999999994,
+          "std_bn": 0.35667854856470743
+        },
+        "year1": {
+          "EaR95_bn": 0.11768784153144018,
+          "EaR95_pct_base": 3.3320992379267316,
+          "EaR99_bn": 0.16652877223177454,
+          "EaR99_pct_base": 4.714933911827518,
+          "base_bn": 3.531942872285726,
+          "mean_bn": 3.530999944384838,
+          "p01_bn": 3.3654141000539513,
+          "p05_bn": 3.4142550307542856,
+          "p50_bn": 3.529390607257036,
+          "p95_bn": 3.652824945715293,
+          "prob_below_base_pct": 51.32,
+          "std_bn": 0.0717303414529449
+        },
+        "year2": {
+          "EaR95_bn": 0.21179622369288031,
+          "EaR95_pct_base": 5.812294005101835,
+          "EaR99_bn": 0.2962304281978221,
+          "EaR99_pct_base": 8.129410014598053,
+          "base_bn": 3.6439351400148166,
+          "mean_bn": 3.644085284841988,
+          "p01_bn": 3.3477047118169945,
+          "p05_bn": 3.4321389163219362,
+          "p50_bn": 3.6380700430562536,
+          "p95_bn": 3.8761152395393923,
+          "prob_below_base_pct": 51.849999999999994,
+          "std_bn": 0.13507028322958323
+        },
+        "year3": {
+          "EaR95_bn": 0.2797083577850521,
+          "EaR95_pct_base": 7.574006090495959,
+          "EaR99_bn": 0.3893335069016355,
+          "EaR99_pct_base": 10.542460639568079,
+          "base_bn": 3.6930041307470924,
+          "mean_bn": 3.693245598617189,
+          "p01_bn": 3.303670623845457,
+          "p05_bn": 3.4132957729620403,
+          "p50_bn": 3.6844724837238383,
+          "p95_bn": 3.9999517998917167,
+          "prob_below_base_pct": 51.94,
+          "std_bn": 0.18171295271030535
+        }
+      },
+      "label": "Hull-White (1990-2007 calibration)",
+      "params": {
+        "a": 0.19534679298362506,
+        "end": "2007-12-01",
+        "half_life_years": 3.5482905553409743,
+        "long_run_mean_pct": 2.775963494800025,
+        "n_obs": 215,
+        "phi": 0.9838528857926955,
+        "phi_se": 0.007960694103736166,
+        "resid_excess_kurtosis": 1.5947797853703571,
+        "resid_jarque_bera_p": 2.2031027365769976e-11,
+        "sigma": 0.0068662009880744715,
+        "sigma_bp_per_sqrt_year": 68.66200988074472,
+        "start": "1990-01-01"
+      },
+      "short_rate_pct": {
+        "mean_by_year": [
+          4.777950707096389,
+          4.903642302034269,
+          4.855620578421936
+        ],
+        "p05_y3": 3.3561470087594087,
+        "p95_y3": 6.355094148084463,
+        "share_negative_rates_pct": 0.0
+      }
+    },
+    "martingale_check_5y": {
+      "curve_discount_factor": 0.7881751515543662,
+      "error_bp_of_price": -0.10234405652803362,
+      "maturity": 5.0,
+      "mc_discount_factor": 0.7881670850501398,
+      "mc_std_error": 0.00019229978595340335
+    },
+    "n_months": 36,
+    "n_paths": 10000,
+    "note": "EaR = base-path NII minus the (1-p) percentile of simulated NII; positive = shortfall. Illustrative bank.",
+    "runtime_seconds": 0.8462762832641602,
+    "seed": 20260930,
+    "vasicek_benchmark": {
+      "deposit_deviation_pct_y3": {
+        "mean": 0.11412398935237932,
+        "p05": -7.543767860352331,
+        "p95": 8.159285453101091
+      },
+      "ear": {
+        "cumulative_3y": {
+          "EaR95_bn": 0.7913847640385612,
+          "EaR95_pct_base": 7.8667287243320025,
+          "EaR99_bn": 1.1242845370101584,
+          "EaR99_pct_base": 11.175905657427041,
+          "base_bn": 10.059896454682452,
+          "mean_bn": 10.020865493102674,
+          "p01_bn": 8.935611917672293,
+          "p05_bn": 9.26851169064389,
+          "p50_bn": 10.03473757274391,
+          "p95_bn": 10.728544803465313,
+          "prob_below_base_pct": 52.470000000000006,
+          "std_bn": 0.44103978989134035
+        },
+        "year1": {
+          "EaR95_bn": 0.12669321049982996,
+          "EaR95_pct_base": 3.6904864829999298,
+          "EaR99_bn": 0.179775261859489,
+          "EaR99_pct_base": 5.236730297170166,
+          "base_bn": 3.432967742421951,
+          "mean_bn": 3.429438130053523,
+          "p01_bn": 3.253192480562462,
+          "p05_bn": 3.306274531922121,
+          "p50_bn": 3.4299444007701316,
+          "p95_bn": 3.5528192731799098,
+          "prob_below_base_pct": 51.949999999999996,
+          "std_bn": 0.07442055457469192
+        },
+        "year2": {
+          "EaR95_bn": 0.2795249589866189,
+          "EaR95_pct_base": 8.328231918074044,
+          "EaR99_bn": 0.4038867862407458,
+          "EaR99_pct_base": 12.033497247090375,
+          "base_bn": 3.3563541666027565,
+          "mean_bn": 3.3429455782069932,
+          "p01_bn": 2.9524673803620107,
+          "p05_bn": 3.0768292076161377,
+          "p50_bn": 3.3465174734137317,
+          "p95_bn": 3.597025316451149,
+          "prob_below_base_pct": 52.480000000000004,
+          "std_bn": 0.15832644615630823
+        },
+        "year3": {
+          "EaR95_bn": 0.4250529600646282,
+          "EaR95_pct_base": 12.99627799736165,
+          "EaR99_bn": 0.6097731629360901,
+          "EaR99_pct_base": 18.64422150981606,
+          "base_bn": 3.2705745456577446,
+          "mean_bn": 3.2484817848421583,
+          "p01_bn": 2.6608013827216546,
+          "p05_bn": 2.8455215855931164,
+          "p50_bn": 3.256837916542779,
+          "p95_bn": 3.6223771177472246,
+          "prob_below_base_pct": 52.43,
+          "std_bn": 0.23699231231786763
+        }
+      },
+      "label": "Vasicek benchmark (1990-2026 calibration)",
+      "params": {
+        "a": 0.10861518798278663,
+        "end": "2026-09-01",
+        "half_life_years": 6.381678229657858,
+        "long_run_mean_pct": 1.7959649987864428,
+        "n_obs": 440,
+        "phi": 0.9909895737308821,
+        "phi_se": 0.0040516021478453085,
+        "resid_excess_kurtosis": 7.353440790172527,
+        "resid_jarque_bera_p": 1.2406233238922155e-239,
+        "sigma": 0.006476070047072181,
+        "sigma_bp_per_sqrt_year": 64.7607004707218,
+        "start": "1990-01-01"
+      },
+      "short_rate_pct": {
+        "mean_by_year": [
+          3.761571672179567,
+          3.5592626992625735,
+          3.37777626478969
+        ],
+        "p05_y3": 1.7844520986534564,
+        "p95_y3": 4.971100430925925,
+        "share_negative_rates_pct": 0.0037837837837837837
+      }
+    }
+  },
+  "nii_drivers": {
+    "attribution_2022_23_cycle": {
+      "asset_yield_end": 5.268083769621941,
+      "asset_yield_start": 2.476131721402268,
+      "d_nii": 37556.0,
+      "expense_delta": 127051.0,
+      "expense_mix": 278.1459486997835,
+      "expense_rate": 126754.58156531809,
+      "expense_volume": 18.272485982130544,
+      "fedfunds_end": 5.33,
+      "fedfunds_start": 0.08,
+      "funding_cost_end": 2.300648547587935,
+      "funding_cost_start": 0.14182170680686923,
+      "income_delta": 164607.0,
+      "income_mix": 359.71859183268293,
+      "income_rate": 163928.25350201718,
+      "income_volume": 319.02790615012,
+      "industry_asset_yield_beta_vs_ff": 0.5318003901370807,
+      "industry_funding_beta_vs_ff": 0.4112051125297268,
+      "mix": 81.57264313289943,
+      "nii_ratio_end": 2.967435222034006,
+      "nii_ratio_peak": 3.0549109981348863,
+      "nii_ratio_peak_date": "2022-10-01",
+      "nii_ratio_start": 2.3343100145953986,
+      "rate": 37173.67193669909,
+      "share_of_dNII_from_rate": 0.9898197874294145,
+      "share_of_dNII_from_volume": 0.008008185647246497,
+      "volume": 300.7554201679894,
+      "window": "2021Q4 -> 2023Q4 (quarterly flows, $M)"
+    },
+    "attribution_check": {
+      "max_abs_reconstruction_error_qoq": 3.9108272176235914e-11
+    },
+    "driver_regressions": {
+      "annual_differences": {
+        "adj_r2": -0.000334088601703586,
+        "coef": {
+          "const": {
+            "b": 0.01209388490910645,
+            "ci_hi": 0.07040688165756606,
+            "ci_lo": -0.046219111839353164,
+            "p": 0.6843834999922911
+          },
+          "d_ff": {
+            "b": 0.015603790283844737,
+            "ci_hi": 0.07938768690441671,
+            "ci_lo": -0.04818010633672724,
+            "p": 0.63159982205788
+          },
+          "d_slope": {
+            "b": 0.027839478876822008,
+            "ci_hi": 0.07164667238064681,
+            "ci_lo": -0.015967714627002794,
+            "p": 0.21292691411714226
+          }
+        },
+        "durbin_watson": 0.23497783259558896,
+        "n": 165,
+        "r2": 0.01186510760075632
+      },
+      "levels_ff_slope": {
+        "adj_r2": 0.07792498756040234,
+        "coef": {
+          "const": {
+            "b": 2.8764525052398904,
+            "ci_hi": 3.118231374297143,
+            "ci_lo": 2.634673636182638,
+            "p": 2.927785875193676e-120
+          },
+          "fedfunds": {
+            "b": 0.025467147231950347,
+            "ci_hi": 0.06882425037639055,
+            "ci_lo": -0.017889955912489857,
+            "p": 0.24963104765285915
+          },
+          "slope": {
+            "b": 0.06992499530528198,
+            "ci_hi": 0.15207694115206533,
+            "ci_lo": -0.012226950541501358,
+            "p": 0.09526492847054566
+          }
+        },
+        "durbin_watson": 0.062026382987157035,
+        "n": 169,
+        "r2": 0.08890207104182601
+      },
+      "levels_with_beta_proxy": {
+        "adj_r2": 0.35962517337645084,
+        "coef": {
+          "beta_proxy_l1": {
+            "b": -0.05030328817807922,
+            "ci_hi": 0.305362143862793,
+            "ci_lo": -0.4059687202189514,
+            "p": 0.7816218434363108
+          },
+          "const": {
+            "b": 2.6396264327709567,
+            "ci_hi": 2.9383736679884667,
+            "ci_lo": 2.3408791975534466,
+            "p": 3.4676064308169436e-67
+          },
+          "d4_ff_l1": {
+            "b": 0.01645447277333867,
+            "ci_hi": 0.07208849417084229,
+            "ci_lo": -0.03917954862416496,
+            "p": 0.5621274688071322
+          },
+          "fedfunds": {
+            "b": 0.07479507193137902,
+            "ci_hi": 0.1270347945933134,
+            "ci_lo": 0.02255534926944463,
+            "p": 0.005012796660135232
+          },
+          "slope": {
+            "b": 0.17283671377771315,
+            "ci_hi": 0.2538895236680616,
+            "ci_lo": 0.09178390388736467,
+            "p": 2.92253511944405e-05
+          }
+        },
+        "durbin_watson": 0.11935091814463346,
+        "n": 147,
+        "r2": 0.3771696891743562
+      },
+      "levels_with_break_dummies": {
+        "adj_r2": 0.3247701869934708,
+        "coef": {
+          "const": {
+            "b": 3.2192284936949225,
+            "ci_hi": 3.630153423928021,
+            "ci_lo": 2.808303563461824,
+            "p": 3.301367726435675e-53
+          },
+          "d4_ff_l1": {
+            "b": 0.014575164741332332,
+            "ci_hi": 0.07937931824278771,
+            "ci_lo": -0.05022898876012305,
+            "p": 0.6593452012486811
+          },
+          "fedfunds": {
+            "b": -0.006244155174550806,
+            "ci_hi": 0.05064287045703686,
+            "ci_lo": -0.06313118080613847,
+            "p": 0.8296630397658727
+          },
+          "post2008": {
+            "b": -0.3175199529925476,
+            "ci_hi": -0.05691586575305685,
+            "ci_lo": -0.5781240402320383,
+            "p": 0.016939437633444385
+          },
+          "post2020": {
+            "b": -0.13444637022974348,
+            "ci_hi": 0.18476102777501702,
+            "ci_lo": -0.453653768234504,
+            "p": 0.4090800732327491
+          },
+          "slope": {
+            "b": 0.03457148523116052,
+            "ci_hi": 0.15587133463545683,
+            "ci_lo": -0.0867283641731358,
+            "p": 0.5764304064047345
+          }
+        },
+        "durbin_watson": 0.08836666634009648,
+        "n": 164,
+        "r2": 0.34548275794459127
+      },
+      "levels_with_lagged_change": {
+        "adj_r2": 0.1951379446062158,
+        "coef": {
+          "const": {
+            "b": 2.73685677304214,
+            "ci_hi": 2.994417657463328,
+            "ci_lo": 2.479295888620952,
+            "p": 2.480204248106686e-96
+          },
+          "d4_ff_l1": {
+            "b": 0.022146610594946665,
+            "ci_hi": 0.0900147345254845,
+            "ci_lo": -0.045721513335591164,
+            "p": 0.5224508200049954
+          },
+          "fedfunds": {
+            "b": 0.04789155152939312,
+            "ci_hi": 0.09306098875161996,
+            "ci_lo": 0.0027221143071662762,
+            "p": 0.03770196682794416
+          },
+          "slope": {
+            "b": 0.12429493537950437,
+            "ci_hi": 0.22694727815169874,
+            "ci_lo": 0.02164259260731001,
+            "p": 0.017635150831887433
+          }
+        },
+        "durbin_watson": 0.07732934895147693,
+        "n": 164,
+        "r2": 0.20995135666867815
+      },
+      "note": "NII ratio and the policy rate are persistent (see stationarity); the levels R2 can be inflated by common trends, so the 4-quarter-difference specification is the cleaner estimate of the short-run rate/slope sensitivity."
+    },
+    "latest": {
+      "asset_yield": 4.8424575672124455,
+      "date": "2026-04-01",
+      "funding_cost": 1.8407506677543661,
+      "nii_ratio": 3.001706899458079
+    },
+    "sample": {
+      "first": "1984-04-01",
+      "last": "2026-04-01",
+      "n": 169
+    },
+    "stationarity": {
+      "asset_yield": {
+        "adf_p_diff": 2.8631448676230757e-07,
+        "adf_p_level": 0.33724231837394203,
+        "kpss_p_level": 0.01
+      },
+      "fedfunds": {
+        "adf_p_diff": 2.9992351996062846e-09,
+        "adf_p_level": 0.00926542449140222,
+        "kpss_p_level": 0.01
+      },
+      "funding_cost": {
+        "adf_p_diff": 2.2899795275693362e-06,
+        "adf_p_level": 0.13484659783499447,
+        "kpss_p_level": 0.01
+      },
+      "nii_ratio": {
+        "adf_p_diff": 4.635785094331428e-06,
+        "adf_p_level": 0.22619388078544173,
+        "kpss_p_level": 0.017871831880235688
+      },
+      "slope": {
+        "adf_p_diff": 3.0826632863221964e-15,
+        "adf_p_level": 0.0032831934249472807,
+        "kpss_p_level": 0.04661447205302237
+      }
+    },
+    "structural_breaks": {
+      "chow_2008Q4": {
+        "F": 34.5825796179133,
+        "date": "2008-10-01",
+        "p": 0.0
+      },
+      "chow_2020Q1": {
+        "F": 14.28174473809143,
+        "date": "2020-01-01",
+        "p": 2.621853656403772e-08
+      },
+      "cusum_ols_p": 2.7014669247765647e-05
+    },
+    "usnim_validation": {
+      "correlation_changes_4q": 0.7674589910307836,
+      "correlation_levels": 0.7361964652918447,
+      "explanation": "USNIM divides NII by earning assets; ours divides by total assets (incl. cash-like, fixed and non-earning assets), so ours is lower by roughly the earning-asset share.",
+      "first": "1984-04-01",
+      "last": "2020-07-01",
+      "mean_nii_over_assets": 3.1271657489410534,
+      "mean_ratio_nii_assets_over_usnim": 0.8388239095194974,
+      "mean_usnim": 3.752739726027398,
+      "n_quarters": 146,
+      "slope_usnim_on_ours": 1.1091255306358334
+    }
   }
 }
