@@ -104,3 +104,7 @@ curl -X POST localhost:8000/irrbb/run -H "content-type: application/json" \
 * Forecast US bank deposits with SARIMAX, LightGBM and a TensorFlow LSTM in an **11-fold** rolling-origin backtest; the ensemble cut MASE **42.8%** vs a random walk (**19.9%** vs drift), with conformal intervals at **94.2%** coverage at the 95% level; anomaly detectors flagged the 2008, March 2020 and March 2023 deposit shocks (3/3).
 * Modelled NII drivers and rate/volume attribution on FDIC data for all US banks (1984–2026): policy rate and curve slope explain **8.9%** of NII-margin variation, and **99%** of the 2022–23 rise in NII was a rate effect.
 * Built a Basel IRRBB engine (19 buckets, six shock scenarios, core-deposit caps, 15% Tier 1 outlier test) and a Hull-White Monte Carlo: on an illustrative bank ΔEVE was **−41.6%** of Tier 1 under a parallel +200 bp shock, 95% NII-at-Risk **3.3%** (year 1) to **8.1%** (year 3); shipped as a **66-test, 97%-coverage** FastAPI + Streamlit service.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Data are from FRED (Federal Reserve Bank of St. Louis) and the FDIC; the sample bank is illustrative and not a real institution.

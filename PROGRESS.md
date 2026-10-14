@@ -34,7 +34,7 @@ Numbers are copied from `results/summary.json` (written by code), not typed from
 * **IRRBB (illustrative bank):** worst ΔEVE −41.6% of Tier 1 (parallel up) → outlier; ΔNII +10.0% / −12.1%.
 * **NII-at-Risk:** 95% EaR 3.3% / 5.9% / 8.1% (years 1–3); 99% 4.7% / 8.4% / 11.4%.
 
-## Decisions taken while the user was away
+## Design decisions
 
 1. Monthly models train from 1976-07; evaluation 2016–2026; 2012–15 warm-up for ensemble weights and conformal calibration.
 2. Both random-walk and drift baselines reported; headline improvement quoted against both.
@@ -52,6 +52,5 @@ Zig-zag cycle detector mishandled the first/last leg (found by a unit test); fir
 
 * Docker image build and docker-compose not tested (Docker daemon not running locally).
 * GitHub Actions workflow not run (needs a `FRED_API_KEY` repo secret to build data for the integration tests).
-* No GitHub remote configured; work is committed locally only.
-* The FRED API key was pasted into chat; consider rotating it at fred.stlouisfed.org.
+* Keep the FRED key only in the gitignored `.env` (or CI secrets); rotate it if it was ever shared elsewhere.
 * Independent validation has not happened; `docs/validation_report.md` is a developer self-assessment.
