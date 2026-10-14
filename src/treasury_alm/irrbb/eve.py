@@ -8,6 +8,7 @@ value. This is the standard 'market value = book value at inception' convention:
 credit/liquidity margin from the base case while keeping each product's cash-flow timing and optionality,
 so DeltaEVE isolates the effect of the rate shock. The same s_i is reused in every shocked scenario.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -34,7 +35,9 @@ class EVECalculator:
     def calibrate(self, base_ctx: Context) -> None:
         for p in self.products:
             slot = self.slotted(p, base_ctx)
-            self.spreads[p.name] = float(brentq(lambda s: self._pv(slot, base_ctx, s) - p.balance, -60.0, 60.0, xtol=1e-10))
+            self.spreads[p.name] = float(
+                brentq(lambda s, sl=slot, bal=p.balance: self._pv(sl, base_ctx, s) - bal, -60.0, 60.0, xtol=1e-10)
+            )
 
     def product_pv(self, p: BaseProduct, ctx: Context) -> float:
         return self._pv(self.slotted(p, ctx), ctx, self.spreads[p.name])
@@ -59,5 +62,14 @@ class EVECalculator:
             else:
                 l_ += b
         cum = np.cumsum(a - l_)
-        return [{"bucket": i + 1, "midpoint_years": float(self.mid[i]), "assets": float(a[i]), "liabilities": float(l_[i]),
-                 "gap": float(a[i] - l_[i]), "cumulative_gap": float(cum[i])} for i in range(len(self.mid))]
+        return [
+            {
+                "bucket": i + 1,
+                "midpoint_years": float(self.mid[i]),
+                "assets": float(a[i]),
+                "liabilities": float(l_[i]),
+                "gap": float(a[i] - l_[i]),
+                "cumulative_gap": float(cum[i]),
+            }
+            for i in range(len(self.mid))
+        ]

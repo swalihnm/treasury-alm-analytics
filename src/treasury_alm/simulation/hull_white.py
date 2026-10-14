@@ -11,6 +11,7 @@ gives the exact discretisation used below. Zero-coupon prices on any path:
 (a, sigma) are estimated from history by the exact-discretisation AR(1) of the OU process
 (`calibrate_ou`); the curve fit is exact by construction and checked by a Monte Carlo martingale test.
 """
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -35,10 +36,20 @@ def calibrate_ou(series_pct: pd.Series, dt: float = 1 / 12) -> dict[str, Any]:
     a = -np.log(phi) / dt
     sig = float(np.sqrt(res.mse_resid * 2 * a / (1 - phi**2)))
     jb = stats.jarque_bera(res.resid)
-    return {"a": float(a), "sigma": sig, "long_run_mean_pct": 100 * c / (1 - phi), "phi": phi, "phi_se": float(res.bse[1]),
-            "half_life_years": float(np.log(2) / a), "n_obs": int(res.nobs), "start": str(s.index[0].date()), "end": str(s.index[-1].date()),
-            "resid_jarque_bera_p": float(jb.pvalue), "resid_excess_kurtosis": float(stats.kurtosis(res.resid)),
-            "sigma_bp_per_sqrt_year": 1e4 * sig}
+    return {
+        "a": float(a),
+        "sigma": sig,
+        "long_run_mean_pct": 100 * c / (1 - phi),
+        "phi": phi,
+        "phi_se": float(res.bse[1]),
+        "half_life_years": float(np.log(2) / a),
+        "n_obs": int(res.nobs),
+        "start": str(s.index[0].date()),
+        "end": str(s.index[-1].date()),
+        "resid_jarque_bera_p": float(jb.pvalue),
+        "resid_excess_kurtosis": float(stats.kurtosis(res.resid)),
+        "sigma_bp_per_sqrt_year": 1e4 * sig,
+    }
 
 
 @dataclass
@@ -55,17 +66,19 @@ class HullWhite:
         """Instantaneous forward rate f(0,t) = -d ln P(0,t)/dt (decimal), central difference."""
         t = np.asarray(t, dtype=float)
         lo = np.maximum(t - h, 0.0)
-        return -(self.lnP0(t + h) - self.lnP0(lo)) / (t + h - lo)
+        return np.asarray(-(self.lnP0(t + h) - self.lnP0(lo)) / (t + h - lo), dtype=np.float64)
 
     def alpha(self, t: Arr) -> Arr:
         t = np.asarray(t, dtype=float)
         return self.fwd(t) + self.sigma**2 / (2 * self.a**2) * (1 - np.exp(-self.a * t)) ** 2
 
-    def simulate(self, n_paths: int, n_months: int, seed: int, antithetic: bool = True, deterministic: bool = False) -> Arr:
+    def simulate(
+        self, n_paths: int, n_months: int, seed: int, antithetic: bool = True, deterministic: bool = False
+    ) -> Arr:
         """Short rate paths r[k] (decimal) at t_k = k/12, k = 0..n_months. deterministic=True gives the forward path alpha(t)."""
         dt = 1 / 12
         t = np.arange(n_months + 1) * dt
-        al = self.alpha(t)
+        al = self.alpha(np.asarray(t, dtype=np.float64))
         if deterministic:
             return np.tile(al, (1, 1))
         rng = np.random.default_rng(seed)
@@ -85,9 +98,13 @@ class HullWhite:
         n_months = r.shape[1] - 1
         t = np.arange(n_months + 1) / 12.0
         B = (1 - np.exp(-self.a * tenor)) / self.a
-        lnA = (self.lnP0(t + tenor) - self.lnP0(t) + B * self.fwd(t)
-               - self.sigma**2 / (4 * self.a) * (1 - np.exp(-2 * self.a * t)) * B**2)
-        return -(lnA - B * r) / tenor * 100.0
+        lnA = (
+            self.lnP0(t + tenor)
+            - self.lnP0(t)
+            + B * self.fwd(t)
+            - self.sigma**2 / (4 * self.a) * (1 - np.exp(-2 * self.a * t)) * B**2
+        )
+        return np.asarray(-(lnA - B * r) / tenor * 100.0, dtype=np.float64)
 
     def martingale_check(self, n_paths: int, maturity: float, seed: int) -> dict[str, float]:
         """E[exp(-int r dt)] from simulation vs the curve's P(0,T): the HW 'fits today's curve' test."""
@@ -97,5 +114,10 @@ class HullWhite:
         mc = float(np.exp(-integral).mean())
         se = float(np.exp(-integral).std() / np.sqrt(len(integral)))
         mkt = float(np.exp(self.lnP0(np.array([maturity]))[0]))
-        return {"maturity": maturity, "mc_discount_factor": mc, "curve_discount_factor": mkt, "mc_std_error": se,
-                "error_bp_of_price": 1e4 * (mc - mkt) / mkt}
+        return {
+            "maturity": maturity,
+            "mc_discount_factor": mc,
+            "curve_discount_factor": mkt,
+            "mc_std_error": se,
+            "error_bp_of_price": 1e4 * (mc - mkt) / mkt,
+        }

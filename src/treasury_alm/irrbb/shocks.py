@@ -11,6 +11,7 @@ example (100bp shocks at t = 3.5y: steepener +25.4bp, flattener -1.6bp); see tes
 
 Post-shock floor (SRP31.93): national discretion, must be <= 0. Modes: none | zero | maturity_dependent.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -105,7 +106,9 @@ def flattener(short_bp: float, long_bp: float, x: float = 4.0, c: tuple[float, f
     return Rotation(short_bp, long_bp, c[0], c[1], x, "flattener")
 
 
-def standard_scenarios(sizes: dict[str, float], x: float = 4.0, coeffs: dict[str, tuple[float, float]] | None = None) -> dict[str, BaseShock]:
+def standard_scenarios(
+    sizes: dict[str, float], x: float = 4.0, coeffs: dict[str, tuple[float, float]] | None = None
+) -> dict[str, BaseShock]:
     """The six Basel EVE scenarios for a currency's shock sizes {parallel, short, long} (bp)."""
     cs = coeffs or {}
     st = steepener(sizes["short"], sizes["long"], x, cs.get("steepener", (-0.65, 0.90)))

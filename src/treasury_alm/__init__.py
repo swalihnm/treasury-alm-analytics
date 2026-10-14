@@ -1,4 +1,5 @@
 """Treasury ALM analytics: deposit behaviour, NII forecasting and IRRBB stress testing."""
+
 from pathlib import Path
 
 __version__ = "0.1.0"

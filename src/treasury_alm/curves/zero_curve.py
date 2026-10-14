@@ -5,6 +5,7 @@ Bucket midpoints follow the Basel Framework SRP31 standardised-framework time-bu
 3M-6M 0.375y, 6M-9M 0.625y, 9M-1Y 0.875y, 1-1.5Y 1.25y, 1.5-2Y 1.75y, 2-3Y 2.5y, then 3.5..9.5y
 yearly, 10-15Y 12.5y, 15-20Y 17.5y, >20Y 25y). See config/irrbb_basel.yaml for the audited copy.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -14,8 +15,27 @@ from numpy.typing import NDArray
 
 from .nss import FloatArr, NSSParams
 
-BASEL_MIDPOINTS: list[float] = [0.0028, 0.0417, 0.1667, 0.375, 0.625, 0.875, 1.25, 1.75, 2.5, 3.5, 4.5,
-                                5.5, 6.5, 7.5, 8.5, 9.5, 12.5, 17.5, 25.0]
+BASEL_MIDPOINTS: list[float] = [
+    0.0028,
+    0.0417,
+    0.1667,
+    0.375,
+    0.625,
+    0.875,
+    1.25,
+    1.75,
+    2.5,
+    3.5,
+    4.5,
+    5.5,
+    6.5,
+    7.5,
+    8.5,
+    9.5,
+    12.5,
+    17.5,
+    25.0,
+]
 
 
 @dataclass
@@ -27,16 +47,20 @@ class ZeroCurve:
 
     @classmethod
     def from_nss(cls, p: NSSParams, grid: FloatArr | None = None) -> ZeroCurve:
-        g = np.array(sorted(set(BASEL_MIDPOINTS) | set(np.arange(0.25, 30.01, 0.25))), dtype=float) if grid is None else grid
+        g = (
+            np.array(sorted(set(BASEL_MIDPOINTS) | set(np.arange(0.25, 30.01, 0.25))), dtype=float)
+            if grid is None
+            else grid
+        )
         return cls(g, p.zero(g))
 
     def zero(self, t: FloatArr | float) -> NDArray[np.float64]:
         ta = np.atleast_1d(np.asarray(t, dtype=float))
-        return np.interp(ta, self.tenors, self.rates)
+        return np.asarray(np.interp(ta, self.tenors, self.rates), dtype=np.float64)
 
     def discount(self, t: FloatArr | float) -> NDArray[np.float64]:
         ta = np.atleast_1d(np.asarray(t, dtype=float))
-        return np.exp(-self.zero(ta) / 100.0 * ta)
+        return np.asarray(np.exp(-self.zero(ta) / 100.0 * ta), dtype=np.float64)
 
     def forward(self, t1: float, t2: float) -> float:
         d1, d2 = float(self.discount(t1)[0]), float(self.discount(t2)[0])

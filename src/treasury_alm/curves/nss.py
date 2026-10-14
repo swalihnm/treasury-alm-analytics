@@ -9,6 +9,7 @@ We therefore compute the par yield implied by z(T) (semi-annual coupons, bills <
 zero-coupon money-market yields) and minimise the par-yield error. Fitting a zero-curve formula
 directly to par yields would bias the long end.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -21,8 +22,16 @@ FloatArr = NDArray[np.float64]
 
 # Months-to-years maturities of the FRED constant-maturity series
 TENORS: dict[str, float] = {
-    "gs1m": 1 / 12, "tb3ms": 0.25, "gs1": 1.0, "gs2": 2.0, "gs3": 3.0,
-    "gs5": 5.0, "gs7": 7.0, "gs10": 10.0, "gs20": 20.0, "gs30": 30.0,
+    "gs1m": 1 / 12,
+    "tb3ms": 0.25,
+    "gs1": 1.0,
+    "gs2": 2.0,
+    "gs3": 3.0,
+    "gs5": 5.0,
+    "gs7": 7.0,
+    "gs10": 10.0,
+    "gs20": 20.0,
+    "gs30": 30.0,
 }
 
 
@@ -50,17 +59,19 @@ class NSSParams:
     def zero(self, t: FloatArr | float) -> FloatArr:
         """Continuously-compounded zero rate in percent at maturity t (years)."""
         ta = np.atleast_1d(np.asarray(t, dtype=float))
-        return _loadings(ta, self.tau1, self.tau2) @ np.array([self.b0, self.b1, self.b2, self.b3])
+        return np.asarray(
+            _loadings(ta, self.tau1, self.tau2) @ np.array([self.b0, self.b1, self.b2, self.b3]), dtype=np.float64
+        )
 
     def discount(self, t: FloatArr | float) -> FloatArr:
         ta = np.atleast_1d(np.asarray(t, dtype=float))
-        return np.exp(-self.zero(ta) / 100.0 * ta)
+        return np.asarray(np.exp(-self.zero(ta) / 100.0 * ta), dtype=np.float64)
 
     def par_yield(self, T: float, freq: int = 2) -> float:
         """Par yield (percent, bond-equivalent) implied by the zero curve."""
         if T <= 1.0:  # money-market instruments: simple-compounded zero yield
-            d = float(self.discount(T)[0])
-            return float((1 / d - 1) / T * 100.0)
+            d1 = float(self.discount(T)[0])
+            return float((1 / d1 - 1) / T * 100.0)
         n = int(round(T * freq))
         times = np.arange(1, n + 1) / freq
         d = self.discount(times)

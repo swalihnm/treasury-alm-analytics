@@ -1,4 +1,5 @@
 """12-month net interest income under a constant balance sheet (SRP31 earnings measure)."""
+
 from __future__ import annotations
 
 from .products import BaseProduct, Context

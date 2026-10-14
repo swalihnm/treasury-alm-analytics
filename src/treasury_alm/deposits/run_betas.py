@@ -1,4 +1,5 @@
 """Module 3 driver: cycle betas, ECM, asymmetry, level-dependence, Kalman beta; export for IRRBB."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -13,8 +14,13 @@ from . import betas as B
 from .ecm import cointegration_tests, ecm_fit
 from .kalman_beta import fit_tv_beta
 
-PRODUCTS = {"savings_old": "sav_old", "money_market_old": "mm_old", "cd12_old": "cd12_old",
-            "savings_new": "sav_new", "cd12_new": "cd12_new"}
+PRODUCTS = {
+    "savings_old": "sav_old",
+    "money_market_old": "mm_old",
+    "cd12_old": "cd12_old",
+    "savings_new": "sav_new",
+    "cd12_new": "cd12_new",
+}
 REGIME_WINDOWS = {"old": ("2009-05-01", "2021-03-01"), "new": ("2021-04-01", None)}
 
 
@@ -42,8 +48,20 @@ def run() -> dict[str, Any]:
     ff = m["fedfunds"].dropna()
     cycles = B.identify_cycles(ff)
     relevant = [c for c in cycles if c.end >= pd.Timestamp("2009-05-01")]
-    out: dict[str, Any] = {"cycles": [{"label": c.label, "kind": c.kind, "start": str(c.start.date()), "end": str(c.end.date()),
-                                       "start_rate": c.start_rate, "end_rate": c.end_rate, "ongoing": c.ongoing} for c in relevant]}
+    out: dict[str, Any] = {
+        "cycles": [
+            {
+                "label": c.label,
+                "kind": c.kind,
+                "start": str(c.start.date()),
+                "end": str(c.end.date()),
+                "start_rate": c.start_rate,
+                "end_rate": c.end_rate,
+                "ongoing": c.ongoing,
+            }
+            for c in relevant
+        ]
+    }
     out["cycle_betas"] = B.cycle_table(m, relevant, PRODUCTS)
 
     ecm: dict[str, Any] = {}
@@ -63,20 +81,35 @@ def run() -> dict[str, Any]:
         for sname, (d_, f_) in samples.items():
             key = f"{name}|{sname}"
             try:
-                ecm[key] = {**ecm_fit(d_, f_), "tests": cointegration_tests(d_, f_), "sample": [str(d_.index[0].date()), str(d_.index[-1].date())]}
+                ecm[key] = {
+                    **ecm_fit(d_, f_),
+                    "tests": cointegration_tests(d_, f_),
+                    "sample": [str(d_.index[0].date()), str(d_.index[-1].date())],
+                }
             except Exception as e:  # keep going; report failures honestly
                 ecm[key] = {"error": str(e)}
         asym[name] = B.asymmetric_beta(dep, f)
         lvl[name] = B.level_dependence(dep, f)
         k = fit_tv_beta(dep, f)
         roll = B.rolling_beta(dep, f)
-        tv[name] = {"params": k["params"], "converged": k["converged"], "beta_smoothed_last": float(k["smoothed"].iloc[-1]),
-                    "beta_smoothed_min": float(k["smoothed"].min()), "beta_smoothed_max": float(k["smoothed"].max()),
-                    "beta_filtered_last": float(k["filtered"].iloc[-1])}
-        tv_frames[name] = pd.concat([k["smoothed"], k["filtered"], k["smoothed_se"].rename("se"), roll.rename("rolling")], axis=1)
+        tv[name] = {
+            "params": k["params"],
+            "converged": k["converged"],
+            "beta_smoothed_last": float(k["smoothed"].iloc[-1]),
+            "beta_smoothed_min": float(k["smoothed"].min()),
+            "beta_smoothed_max": float(k["smoothed"].max()),
+            "beta_filtered_last": float(k["filtered"].iloc[-1]),
+        }
+        tv_frames[name] = pd.concat(
+            [k["smoothed"], k["filtered"], k["smoothed_se"].rename("se"), roll.rename("rolling")], axis=1
+        )
     out.update({"ecm": ecm, "asymmetry": asym, "level_dependence": lvl, "time_varying": tv})
-    pl.from_pandas(pd.concat(tv_frames, axis=1).pipe(lambda d: d.set_axis(["|".join(c) for c in d.columns], axis=1)).reset_index()).write_parquet(
-        PROCESSED / "tv_beta.parquet")
+    pl.from_pandas(
+        pd.concat(tv_frames, axis=1)
+        .pipe(lambda d: d.set_axis(["|".join(c) for c in d.columns], axis=1))
+        .rename_axis("date")
+        .reset_index()
+    ).write_parquet(PROCESSED / "tv_beta.parquet")
     update_summary("betas", out)
     export_for_irrbb(out)
     return out
@@ -89,8 +122,11 @@ def export_for_irrbb(res: dict[str, Any]) -> None:
     Retail-transactional and wholesale betas are NOT observable in FRED and are labelled
     assumptions (scaled from the measured series); see docs/assumptions_register.md.
     """
+
     def pick(product: str, kind: str, lag: int = 6) -> float | None:
-        rows = [r for r in res["cycle_betas"] if r["product"] == product and r["kind"] == kind and r["lag_months"] == lag]
+        rows = [
+            r for r in res["cycle_betas"] if r["product"] == product and r["kind"] == kind and r["lag_months"] == lag
+        ]
         rows = [r for r in rows if r["regime"] == "new"] or rows
         return float(rows[-1]["beta"]) if rows else None
 
@@ -98,13 +134,27 @@ def export_for_irrbb(res: dict[str, Any]) -> None:
     cd_up, cd_dn = pick("cd12_new", "hike"), pick("cd12_new", "cut")
     out = {
         "_note": "Generated by treasury_alm.deposits.run_betas. 'measured' = FRED-derived; 'assumption' = not observable.",
-        "measured": {"savings_up": sav_up, "savings_down": sav_dn, "cd12_up": cd_up, "cd12_down": cd_dn,
-                     "source_cycles": "algorithmic cycles " + ", ".join(
-                         c["label"] for c in res["cycles"] if c["start"] >= "2021-04") + " (new FDIC regime), 6-month lag-adjusted"},
+        "measured": {
+            "savings_up": sav_up,
+            "savings_down": sav_dn,
+            "cd12_up": cd_up,
+            "cd12_down": cd_dn,
+            "source_cycles": "algorithmic cycles "
+            + ", ".join(c["label"] for c in res["cycles"] if c["start"] >= "2021-04")
+            + " (new FDIC regime), 6-month lag-adjusted",
+        },
         "betas": {
-            "retail_transactional": {"up": 0.25 * (sav_up or 0.0), "down": 0.25 * (sav_dn or 0.0), "basis": "assumption: 0.25 x measured savings beta"},
+            "retail_transactional": {
+                "up": 0.25 * (sav_up or 0.0),
+                "down": 0.25 * (sav_dn or 0.0),
+                "basis": "assumption: 0.25 x measured savings beta",
+            },
             "retail_non_transactional": {"up": sav_up, "down": sav_dn, "basis": "measured: national savings rate"},
-            "wholesale": {"up": cd_up, "down": cd_dn, "basis": "proxy: 12M CD national rate (wholesale deposits not in FRED)"},
+            "wholesale": {
+                "up": cd_up,
+                "down": cd_dn,
+                "basis": "proxy: 12M CD national rate (wholesale deposits not in FRED)",
+            },
             "term_deposits": {"up": cd_up, "down": cd_dn, "basis": "measured: 12M CD national rate"},
         },
     }

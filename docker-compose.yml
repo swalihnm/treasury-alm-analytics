@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment: [FRED_API_KEY]
+    volumes: ["./data:/app/data", "./results:/app/results", "./config:/app/config"]
+  dashboard:
+    build: .
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    ports: ["8501:8501"]
+    volumes: ["./data:/app/data", "./results:/app/results", "./reports:/app/reports", "./config:/app/config"]
+  mlflow:
+    build: .
+    command: mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000
+    ports: ["5000:5000"]
+    volumes: ["./mlflow.db:/app/mlflow.db"]

@@ -1,4 +1,5 @@
 """Single writer for results/summary.json: every quoted number must pass through here."""
+
 from __future__ import annotations
 
 import json

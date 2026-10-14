@@ -13,6 +13,7 @@ Protocol
   same model and horizon (origins s with s+h <= t). Interval = point +/- the ceil((n+1)*level)-th
   smallest. No test-period information is used.
 """
+
 from __future__ import annotations
 
 import warnings
@@ -34,15 +35,23 @@ STRESS = {"covid_2020": ("2020-03-01", "2020-12-01"), "hiking_2022_23": ("2022-0
 
 
 def make_models() -> list[BaseForecaster]:
-    return [NaiveForecaster("rw"), NaiveForecaster("drift"), SarimaxForecaster(), LightGBMForecaster(), LSTMForecaster()]
+    return [
+        NaiveForecaster("rw"),
+        NaiveForecaster("drift"),
+        SarimaxForecaster(),
+        LightGBMForecaster(),
+        LSTMForecaster(),
+    ]
 
 
-def collect_predictions(df: pd.DataFrame, models: list[BaseForecaster], verbose: bool = True) -> dict[str, pd.DataFrame]:
+def collect_predictions(
+    df: pd.DataFrame, models: list[BaseForecaster], verbose: bool = True
+) -> dict[str, pd.DataFrame]:
     last = df.index[-1]
     preds: dict[str, list[pd.DataFrame]] = {m.name: [] for m in models}
     for year in range(WARMUP_START, last.year + 1):
         cutoff = pd.Timestamp(year - 1, 12, 1)
-        origins = df.loc[f"{year}-01-01": f"{year}-12-01"].index
+        origins = df.loc[f"{year}-01-01" : f"{year}-12-01"].index
         for m in models:
             m.fit(df, cutoff)
             preds[m.name].append(m.predict(df, origins))
@@ -56,7 +65,13 @@ def ensemble_from_warmup(preds: dict[str, pd.DataFrame], truth: pd.DataFrame, co
     out = pd.DataFrame(index=next(iter(preds.values())).index, columns=list(HORIZONS), dtype=float)
     weights: dict[int, dict[str, float]] = {}
     for h in HORIZONS:
-        wu = [i for i in out.index if WARMUP_START <= i.year < EVAL_START and not np.isnan(truth.loc[i, h]) and i + pd.DateOffset(months=h) < pd.Timestamp(EVAL_START, 1, 1)]
+        wu = [
+            i
+            for i in out.index
+            if WARMUP_START <= i.year < EVAL_START
+            and not np.isnan(truth.loc[i, h])
+            and i + pd.DateOffset(months=h) < pd.Timestamp(EVAL_START, 1, 1)
+        ]
         mae = {c: float(np.mean(np.abs(preds[c].loc[wu, h] - truth.loc[wu, h]))) for c in components}
         raw = {c: 1.0 / mae[c] ** 2 for c in components}
         s = sum(raw.values())
@@ -68,11 +83,19 @@ def ensemble_from_warmup(preds: dict[str, pd.DataFrame], truth: pd.DataFrame, co
 
 def _mase_scale(truth: pd.DataFrame) -> dict[int, float]:
     tr = truth.loc["2009-06-01":"2015-12-01"]
-    return {h: float(np.nanmean(np.abs(tr[h].dropna().loc[:pd.Timestamp(2015, 12, 1) - pd.DateOffset(months=h)]))) for h in HORIZONS}
+    return {
+        h: float(np.nanmean(np.abs(tr[h].dropna().loc[: pd.Timestamp(2015, 12, 1) - pd.DateOffset(months=h)])))
+        for h in HORIZONS
+    }
 
 
-def metrics_table(preds: dict[str, pd.DataFrame], df: pd.DataFrame, truth: pd.DataFrame, start: str = "2016-01-01",
-                  end: str | None = None) -> dict[str, dict[int, dict[str, float]]]:
+def metrics_table(
+    preds: dict[str, pd.DataFrame],
+    df: pd.DataFrame,
+    truth: pd.DataFrame,
+    start: str = "2016-01-01",
+    end: str | None = None,
+) -> dict[str, dict[int, dict[str, float]]]:
     scale = _mase_scale(truth)
     out: dict[str, dict[int, dict[str, float]]] = {}
     for name, p in preds.items():
@@ -83,12 +106,18 @@ def metrics_table(preds: dict[str, pd.DataFrame], df: pd.DataFrame, truth: pd.Da
             f_lvl = df.loc[idx, "D"] * np.exp(p.loc[idx, h] / 100)
             a_lvl = df.loc[idx, "D"] * np.exp(truth.loc[idx, h] / 100)
             smape = float(np.mean(200 * np.abs(a_lvl - f_lvl) / (np.abs(a_lvl) + np.abs(f_lvl))))
-            out[name][h] = {"MASE": float(np.mean(np.abs(err)) / scale[h]), "sMAPE_level_pct": smape,
-                            "RMSE_pp": float(np.sqrt(np.mean(err**2))), "n": len(idx)}
+            out[name][h] = {
+                "MASE": float(np.mean(np.abs(err)) / scale[h]),
+                "sMAPE_level_pct": smape,
+                "RMSE_pp": float(np.sqrt(np.mean(err**2))),
+                "n": len(idx),
+            }
     return out
 
 
-def conformal_eval(p: pd.DataFrame, truth: pd.DataFrame, level: float, start: str = "2016-01-01") -> dict[int, dict[str, float]]:
+def conformal_eval(
+    p: pd.DataFrame, truth: pd.DataFrame, level: float, start: str = "2016-01-01"
+) -> dict[int, dict[str, float]]:
     """Rolling split-conformal coverage / width / pinball for one model's predictions."""
     res: dict[int, dict[str, float]] = {}
     a = 1 - level
@@ -97,7 +126,9 @@ def conformal_eval(p: pd.DataFrame, truth: pd.DataFrame, level: float, start: st
         for t in p.loc[start:].index:
             if np.isnan(truth.loc[t, h]):
                 continue
-            hist = [s for s in p.index if s + pd.DateOffset(months=h) <= t and not np.isnan(truth.loc[s, h])][-CALIB_WINDOW:]
+            hist = [s for s in p.index if s + pd.DateOffset(months=h) <= t and not np.isnan(truth.loc[s, h])][
+                -CALIB_WINDOW:
+            ]
             q = conformal_quantile(np.abs(p.loc[hist, h].values - truth.loc[hist, h].values), level)
             if not np.isfinite(q):
                 continue
@@ -106,7 +137,12 @@ def conformal_eval(p: pd.DataFrame, truth: pd.DataFrame, level: float, start: st
             width.append(hi - lo)
             tl, th = a / 2, 1 - a / 2
             pin.append(0.5 * (max(tl * (y - lo), (tl - 1) * (y - lo)) + max(th * (y - hi), (th - 1) * (y - hi))))
-        res[h] = {"coverage": float(np.mean(cover)), "mean_width_pp": float(np.mean(width)), "pinball": float(np.mean(pin)), "n": len(cover)}
+        res[h] = {
+            "coverage": float(np.mean(cover)),
+            "mean_width_pp": float(np.mean(width)),
+            "pinball": float(np.mean(pin)),
+            "n": len(cover),
+        }
     return res
 
 
@@ -116,30 +152,47 @@ def run(track: bool = True) -> dict[str, Any]:
     truth = targets(df)
     models = make_models()
     preds = collect_predictions(df, models)
-    comps = ["naive_drift", "sarimax", "lightgbm", "lstm"]
+    comps: list[str] = [n for n in ("naive_drift", "sarimax", "lightgbm", "lstm") if n in preds]
     preds["ensemble"] = ensemble_from_warmup(preds, truth, comps)
     weights = preds["ensemble"].attrs["weights"]
     table = metrics_table(preds, df, truth)
     stress = {k: metrics_table(preds, df, truth, a, b) for k, (a, b) in STRESS.items()}
     calm_end = "2019-12-01"
     stress["calm_2016_2019"] = metrics_table(preds, df, truth, "2016-01-01", calm_end)
-    intervals = {f"{int(l*100)}": {n: conformal_eval(p, truth, l) for n, p in preds.items() if n != "naive_rw"} for l in (0.8, 0.95)}
+    intervals = {
+        f"{int(l * 100)}": {n: conformal_eval(p, truth, l) for n, p in preds.items() if n != "naive_rw"}
+        for l in (0.8, 0.95)
+    }
     # headline: best model vs naive (mean MASE across horizons)
     mean_mase = {n: float(np.mean([table[n][h]["MASE"] for h in HORIZONS])) for n in table}
     cand = {n: v for n, v in mean_mase.items() if not n.startswith("naive")}
     best = min(cand, key=lambda k: cand[k])
     improvement = {
-        "best_model": best, "mean_MASE": mean_mase,
+        "best_model": best,
+        "mean_MASE": mean_mase,
         "vs_naive_rw_pct": {h: 100 * (1 - table[best][h]["MASE"] / table["naive_rw"][h]["MASE"]) for h in HORIZONS},
-        "vs_naive_drift_pct": {h: 100 * (1 - table[best][h]["MASE"] / table["naive_drift"][h]["MASE"]) for h in HORIZONS},
+        "vs_naive_drift_pct": {
+            h: 100 * (1 - table[best][h]["MASE"] / table["naive_drift"][h]["MASE"]) for h in HORIZONS
+        },
         "mean_vs_naive_rw_pct": 100 * (1 - mean_mase[best] / mean_mase["naive_rw"]),
         "mean_vs_naive_drift_pct": 100 * (1 - mean_mase[best] / mean_mase["naive_drift"]),
     }
     n_folds = df.index[-1].year - EVAL_START + 1
-    out = {"protocol": {"folds_eval": n_folds, "eval_start": f"{EVAL_START}-01", "warmup": f"{WARMUP_START}-{EVAL_START - 1}",
-                        "last_origin": str(df.index[-1].date()), "horizons_months": list(HORIZONS), "calib_window": CALIB_WINDOW},
-           "metrics": table, "stress_windows": stress, "intervals": intervals, "headline": improvement,
-           "ensemble_weights": weights}
+    out = {
+        "protocol": {
+            "folds_eval": n_folds,
+            "eval_start": f"{EVAL_START}-01",
+            "warmup": f"{WARMUP_START}-{EVAL_START - 1}",
+            "last_origin": str(df.index[-1].date()),
+            "horizons_months": list(HORIZONS),
+            "calib_window": CALIB_WINDOW,
+        },
+        "metrics": table,
+        "stress_windows": stress,
+        "intervals": intervals,
+        "headline": improvement,
+        "ensemble_weights": weights,
+    }
     # persist predictions for anomaly module and charts
     long = pd.concat({n: p for n, p in preds.items()}, names=["model", "origin"]).reset_index()
     long.columns = [str(c) for c in long.columns]
@@ -155,6 +208,7 @@ def _log_mlflow(table: dict[str, Any], intervals: dict[str, Any], weights: dict[
     import mlflow
 
     from .. import ROOT
+
     mlflow.set_tracking_uri(f"sqlite:///{(ROOT / 'mlflow.db').as_posix()}")
     mlflow.set_experiment("deposit_forecasting")
     for name, byh in table.items():

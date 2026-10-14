@@ -1,4 +1,5 @@
 """Cash-flow containers, amortisation schedules and bucket slotting."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

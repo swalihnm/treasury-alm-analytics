@@ -9,6 +9,7 @@ alone ignores short-run dynamics. The ECM
 has long-run beta_LR = -delta/alpha and speed of adjustment alpha (< 0; half-life ln(.5)/ln(1+alpha)).
 Standard errors are Newey-West (HAC); beta_LR's SE uses the delta method.
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -37,10 +38,16 @@ def ecm_fit(dep: pd.Series, ff: pd.Series, n_lags: int = 3, maxlags: int = 4) ->
     hl = float(np.log(0.5) / np.log(1 + a)) if -1 < a < 0 else np.nan
     short_run = float(sum(res.params[f"df_l{i}"] for i in range(n_lags + 1)))
     return {
-        "n_obs": int(res.nobs), "alpha": a, "alpha_se": float(res.bse["d_l1"]), "alpha_t": float(res.tvalues["d_l1"]),
-        "beta_lr": beta_lr, "beta_lr_se": se_beta,
+        "n_obs": int(res.nobs),
+        "alpha": a,
+        "alpha_se": float(res.bse["d_l1"]),
+        "alpha_t": float(res.tvalues["d_l1"]),
+        "beta_lr": beta_lr,
+        "beta_lr_se": se_beta,
         "beta_lr_ci95": [beta_lr - 1.96 * se_beta, beta_lr + 1.96 * se_beta],
-        "half_life_months": hl, "short_run_cum_beta": short_run, "r2": float(res.rsquared),
+        "half_life_months": hl,
+        "short_run_cum_beta": short_run,
+        "r2": float(res.rsquared),
         "resid_autocorr_lb_p": float(sm.stats.acorr_ljungbox(res.resid, lags=[6])["lb_pvalue"].iloc[0]),
     }
 
@@ -61,8 +68,9 @@ def cointegration_tests(dep: pd.Series, ff: pd.Series) -> dict[str, Any]:
     return out
 
 
-def simulate_ecm(n: int, beta_lr: float, alpha: float, gamma0: float, seed: int, sigma: float = 0.02,
-                 intercept: float = 0.1) -> tuple[pd.Series, pd.Series]:
+def simulate_ecm(
+    n: int, beta_lr: float, alpha: float, gamma0: float, seed: int, sigma: float = 0.02, intercept: float = 0.1
+) -> tuple[pd.Series, pd.Series]:
     """Generate (deposit, policy) series from a known ECM (used by the parameter-recovery test).
 
     Policy follows a regime-switching random walk with drift (hike / hold / cut phases);
@@ -79,6 +87,11 @@ def simulate_ecm(n: int, beta_lr: float, alpha: float, gamma0: float, seed: int,
     d = np.zeros(n)
     d[0] = intercept + beta_lr * f[0]
     for t in range(1, n):
-        d[t] = d[t - 1] + alpha * (d[t - 1] - intercept - beta_lr * f[t - 1]) + gamma0 * (f[t] - f[t - 1]) + rng.normal(0, sigma)
+        d[t] = (
+            d[t - 1]
+            + alpha * (d[t - 1] - intercept - beta_lr * f[t - 1])
+            + gamma0 * (f[t] - f[t - 1])
+            + rng.normal(0, sigma)
+        )
     idx = pd.date_range("2000-01-01", periods=n, freq="MS")
     return pd.Series(d, idx, name="dep"), pd.Series(f, idx, name="ff")

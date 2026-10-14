@@ -11,6 +11,7 @@ decomposition would also need balances by product, which FRED does not provide).
 sum exactly to the change, which the unit tests assert. NII = income - expense, so
 dNII = (volume+rate+mix on income) - (volume+rate+mix on expense).
 """
+
 from __future__ import annotations
 
 import pandas as pd
@@ -32,14 +33,23 @@ def attribution(q: pd.DataFrame, periods: int = 1) -> pd.DataFrame:
         p0, p1 = q.iloc[i - periods], q.iloc[i]
         inc = decompose(p0["int_income"], p0["avg_assets"], p1["int_income"], p1["avg_assets"])
         exp = decompose(p0["int_expense"], p0["avg_assets"], p1["int_expense"], p1["avg_assets"])
-        rows.append({
-            "date": q.index[i],
-            "d_nii": inc["delta"] - exp["delta"],
-            "volume": inc["volume"] - exp["volume"], "rate": inc["rate"] - exp["rate"], "mix": inc["mix"] - exp["mix"],
-            "income_volume": inc["volume"], "income_rate": inc["rate"], "income_mix": inc["mix"],
-            "expense_volume": exp["volume"], "expense_rate": exp["rate"], "expense_mix": exp["mix"],
-            "d_income": inc["delta"], "d_expense": exp["delta"],
-        })
+        rows.append(
+            {
+                "date": q.index[i],
+                "d_nii": inc["delta"] - exp["delta"],
+                "volume": inc["volume"] - exp["volume"],
+                "rate": inc["rate"] - exp["rate"],
+                "mix": inc["mix"] - exp["mix"],
+                "income_volume": inc["volume"],
+                "income_rate": inc["rate"],
+                "income_mix": inc["mix"],
+                "expense_volume": exp["volume"],
+                "expense_rate": exp["rate"],
+                "expense_mix": exp["mix"],
+                "d_income": inc["delta"],
+                "d_expense": exp["delta"],
+            }
+        )
     return pd.DataFrame(rows).set_index("date")
 
 
@@ -48,8 +58,12 @@ def window_attribution(q: pd.DataFrame, start: str, end: str) -> dict[str, float
     p0, p1 = q.loc[start], q.loc[end]
     inc = decompose(p0["int_income"], p0["avg_assets"], p1["int_income"], p1["avg_assets"])
     exp = decompose(p0["int_expense"], p0["avg_assets"], p1["int_expense"], p1["avg_assets"])
-    out = {"d_nii": inc["delta"] - exp["delta"], "volume": inc["volume"] - exp["volume"],
-           "rate": inc["rate"] - exp["rate"], "mix": inc["mix"] - exp["mix"]}
+    out = {
+        "d_nii": inc["delta"] - exp["delta"],
+        "volume": inc["volume"] - exp["volume"],
+        "rate": inc["rate"] - exp["rate"],
+        "mix": inc["mix"] - exp["mix"],
+    }
     out.update({f"income_{k}": v for k, v in inc.items()})
     out.update({f"expense_{k}": v for k, v in exp.items()})
     return out

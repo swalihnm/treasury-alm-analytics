@@ -4,6 +4,7 @@ under a scenario context. All amounts are USD bn; rates are in percent.
 NII convention: instantaneous shock, constant balance sheet (maturing / repricing balances are replaced
 by like-for-like instruments at the shocked market rate), 12-month horizon (SRP31 NII measure).
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -88,7 +89,9 @@ class Floating(BaseProduct):
 
     def cashflows(self, ctx: Context) -> CashFlows:
         t = self.reprice_months / 12
-        return CashFlows(np.array([t]), np.array([self.balance]), np.array([self.balance * self._current(ctx) / 100 * t]))
+        return CashFlows(
+            np.array([t]), np.array([self.balance]), np.array([self.balance * self._current(ctx) / 100 * t])
+        )
 
     def interest(self, ctx: Context) -> FloatArr:
         old = self._current(ctx)
@@ -164,7 +167,7 @@ def mortgage_cpr(wac: float, spread_bp: float, cmin: float, cmax: float, k: floa
     def f(ctx: Context) -> float:
         market = float(ctx.zero(10.0)[0]) + spread_bp / 100.0
         incentive = wac - market
-        return cmin + (cmax - cmin) / (1 + np.exp(-k * (incentive - m0)))
+        return float(cmin + (cmax - cmin) / (1 + np.exp(-k * (incentive - m0))))
 
     return f
 
@@ -199,8 +202,11 @@ class NonMaturityDeposit(BaseProduct):
         betas = np.array([ctx.beta(self.group, s) for s in shift])
         rate = np.maximum(self.rate + betas * shift / 100.0, 0.0)
         cf = uniform_runoff(core, n, rate)
-        return CashFlows(np.concatenate([[OVERNIGHT], cf.t]), np.concatenate([[noncore], cf.principal]),
-                         np.concatenate([[0.0], cf.interest]))
+        return CashFlows(
+            np.concatenate([[OVERNIGHT], cf.t]),
+            np.concatenate([[noncore], cf.principal]),
+            np.concatenate([[0.0], cf.interest]),
+        )
 
     def interest(self, ctx: Context) -> FloatArr:
         shift = float(ctx.shift_bp(1 / 12)[0])

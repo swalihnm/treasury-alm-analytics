@@ -13,6 +13,7 @@ Pipeline per path (10,000 antithetic Hull-White paths, 36 monthly steps):
 EaR at level p = base-path NII - (1-p) percentile of simulated NII (a positive number is a shortfall).
 The 'base path' is the deterministic forward-curve path (no shocks).
 """
+
 from __future__ import annotations
 
 import time
@@ -47,22 +48,37 @@ def fit_deposit_arx() -> dict[str, Any]:
     d = pd.concat([df["g"].rename("y"), X], axis=1).dropna()
     res = sm.OLS(d["y"], sm.add_constant(d.drop(columns="y"))).fit(cov_type="HAC", cov_kwds={"maxlags": 6})
     ff = pd.read_parquet(PROCESSED / "monthly.parquet")[["date", "fedfunds"]].set_index("date")["fedfunds"].dropna()
-    return {"coef": {k: float(v) for k, v in res.params.items()}, "se": {k: float(v) for k, v in res.bse.items()},
-            "sigma": float(np.sqrt(res.mse_resid)), "n": int(res.nobs), "r2": float(res.rsquared),
-            "g_last": float(df["g"].iloc[-1]), "ff_hist": [float(x) for x in ff.iloc[-3:].values], "sample": f"{d.index[0].date()}..{d.index[-1].date()}"}
+    return {
+        "coef": {k: float(v) for k, v in res.params.items()},
+        "se": {k: float(v) for k, v in res.bse.items()},
+        "sigma": float(np.sqrt(res.mse_resid)),
+        "n": int(res.nobs),
+        "r2": float(res.rsquared),
+        "g_last": float(df["g"].iloc[-1]),
+        "ff_hist": [float(x) for x in ff.iloc[-3:].values],
+        "sample": f"{d.index[0].date()}..{d.index[-1].date()}",
+    }
 
 
 def simulate_deposit_growth(arx: dict[str, Any], z1m: Arr, z10: Arr, z3m: Arr, eps: Arr) -> Arr:
     """Monthly deposit growth (%) g[:, m], m = 1..T, given rate paths (index 0 = today)."""
     c = arx["coef"]
     N, T = z1m.shape[0], z1m.shape[1] - 1
-    ff = np.concatenate([np.tile(arx["ff_hist"][:-1], (N, 1)), (arx["ff_hist"][-1] + z1m - z1m[:, [0]])], axis=1)  # cols: ff_-2, ff_-1, ff_0..ff_T
+    ff = np.concatenate(
+        [np.tile(arx["ff_hist"][:-1], (N, 1)), (arx["ff_hist"][-1] + z1m - z1m[:, [0]])], axis=1
+    )  # cols: ff_-2, ff_-1, ff_0..ff_T
     slope = z10 - z3m
     g = np.zeros((N, T + 1))
     g[:, 0] = arx["g_last"]
     for m in range(1, T + 1):
         dff3_prev = ff[:, 2 + m - 1] - ff[:, 2 + m - 1 - 3] if 2 + m - 1 - 3 >= 0 else np.zeros(N)
-        g[:, m] = c["const"] + c["g_l1"] * g[:, m - 1] + c["dff3_l1"] * dff3_prev + c["slope_l1"] * slope[:, m - 1] + eps[:, m - 1]
+        g[:, m] = (
+            c["const"]
+            + c["g_l1"] * g[:, m - 1]
+            + c["dff3_l1"] * dff3_prev
+            + c["slope_l1"] * slope[:, m - 1]
+            + eps[:, m - 1]
+        )
     return g[:, 1:]
 
 
@@ -74,7 +90,7 @@ def _ladder_rates(old: float, new: Arr, n: int, T: int) -> Arr:
     for m in range(1, T + 1):
         lo = max(m - n, 1)
         k_new = m - lo  # entries j = lo..m-1 reprice at new[:, j-1]
-        s = new[:, lo - 1: m - 1].sum(axis=1) if k_new > 0 else 0.0
+        s = new[:, lo - 1 : m - 1].sum(axis=1) if k_new > 0 else 0.0
         out[:, m - 1] = (s + (n - k_new) * old) / n
     return out
 
@@ -89,9 +105,15 @@ class DynamicNII:
         """Monthly NII [N, T] in USD bn. Z[tenor] = zero rates (%) [N, T+1]; dev = fractional deposit deviation [N, T]."""
         a, li = self.bs["assets"], self.bs["liabilities"]
         N, T = dev.shape
-        z = lambda ten: Z[ten][:, :T]  # rate prevailing at the START of month m (index m-1)  # noqa: E731
+
+        def z(ten: float) -> Arr:  # rate prevailing at the START of month m (index m-1)
+            return Z[ten][:, :T]
+
         # --- deposit deviation funding
-        dep0 = sum(li[k]["balance"] for k in ("retail_transactional", "retail_non_transactional", "wholesale_nmd", "term_deposits"))
+        dep0 = sum(
+            li[k]["balance"]
+            for k in ("retail_transactional", "retail_non_transactional", "wholesale_nmd", "term_deposits")
+        )
         d_bal = dev * dep0
         cash0 = a["cash"]["balance"]
         cash = np.maximum(cash0 + d_bal, 0.0)
@@ -114,7 +136,9 @@ class DynamicNII:
         for k in range(T):
             rates_m[:, k] = y
             mkt = Z[10.0][:, k] + m["market_spread_bp"] / 100
-            cpr = cp["min"] + (cp["max"] - cp["min"]) / (1 + np.exp(-cp["steepness_per_pp"] * (m["wac"] - mkt - cp["midpoint_incentive_pp"])))
+            cpr = cp["min"] + (cp["max"] - cp["min"]) / (
+                1 + np.exp(-cp["steepness_per_pp"] * (m["wac"] - mkt - cp["midpoint_incentive_pp"]))
+            )
             phi = np.minimum(sched + (1 - (1 - cpr) ** (1 / 12)), 1.0)
             y = (1 - phi) * y + phi * mkt
         inc += m["balance"] * rates_m / 1200
@@ -133,7 +157,11 @@ class DynamicNII:
         kappa = 1 - np.exp(-1 / max(self.tau, 1e-6))
         dev_f = 1 + dev
         for key in ("retail_transactional", "retail_non_transactional", "wholesale_nmd"):
-            grp = {"retail_transactional": "retail_transactional", "retail_non_transactional": "retail_non_transactional", "wholesale_nmd": "wholesale"}[key]
+            grp = {
+                "retail_transactional": "retail_transactional",
+                "retail_non_transactional": "retail_non_transactional",
+                "wholesale_nmd": "wholesale",
+            }[key]
             b = self.betas[grp]
             r = np.full(N, float(li[key]["rate"]))
             rr = np.zeros((N, T))
@@ -167,11 +195,20 @@ def _earnings_at_risk(nii_annual: Arr, base_annual: Arr) -> dict[str, Any]:
         x = nii_annual[:, i]
         b = float(base_annual[0, i])
         q05, q01 = np.percentile(x, 5), np.percentile(x, 1)
-        out[lab] = {"base_bn": b, "mean_bn": float(x.mean()), "std_bn": float(x.std()), "p05_bn": float(q05), "p01_bn": float(q01),
-                    "p50_bn": float(np.median(x)), "p95_bn": float(np.percentile(x, 95)),
-                    "EaR95_bn": float(b - q05), "EaR99_bn": float(b - q01),
-                    "EaR95_pct_base": float(100 * (b - q05) / b), "EaR99_pct_base": float(100 * (b - q01) / b),
-                    "prob_below_base_pct": float(100 * (x < b).mean())}
+        out[lab] = {
+            "base_bn": b,
+            "mean_bn": float(x.mean()),
+            "std_bn": float(x.std()),
+            "p05_bn": float(q05),
+            "p01_bn": float(q01),
+            "p50_bn": float(np.median(x)),
+            "p95_bn": float(np.percentile(x, 95)),
+            "EaR95_bn": float(b - q05),
+            "EaR99_bn": float(b - q01),
+            "EaR95_pct_base": float(100 * (b - q05) / b),
+            "EaR99_pct_base": float(100 * (b - q01) / b),
+            "prob_below_base_pct": float(100 * (x < b).mean()),
+        }
     return out
 
 
@@ -200,7 +237,9 @@ def run(n_paths: int = N_PATHS) -> dict[str, Any]:
             r0 = HullWhite(ou["a"], ou["sigma"], zero_fn).alpha(np.array([0.0]))[0]
             mdl = Vasicek(ou["a"], ou["long_run_mean_pct"] / 100, ou["sigma"], float(r0))
             r = mdl.simulate(n_paths, T_MONTHS, SEED)
-            r_base = Vasicek(ou["a"], ou["long_run_mean_pct"] / 100, 0.0, float(r0)).simulate(1, T_MONTHS, SEED, antithetic=False)
+            r_base = Vasicek(ou["a"], ou["long_run_mean_pct"] / 100, 0.0, float(r0)).simulate(
+                1, T_MONTHS, SEED, antithetic=False
+            )
         Z, Zb = _zdict(mdl, r), _zdict(mdl, r_base)
         rng = np.random.default_rng(SEED + 1)
         eps = rng.normal(0, arx["sigma"], (n_paths, T_MONTHS))
@@ -211,12 +250,24 @@ def run(n_paths: int = N_PATHS) -> dict[str, Any]:
         nii = model.nii(Z, dev)
         base = model.nii(Zb, np.zeros((1, T_MONTHS)))
         ann, base_ann = _annual(nii), _annual(base)
-        return {"label": label, "params": ou, "ear": _earnings_at_risk(ann, base_ann), "_ann": ann, "_base_ann": base_ann,
-                "short_rate_pct": {"mean_by_year": [float(100 * r[:, k * 12].mean()) for k in (1, 2, 3)],
-                                   "p05_y3": float(100 * np.percentile(r[:, 36], 5)), "p95_y3": float(100 * np.percentile(r[:, 36], 95)),
-                                   "share_negative_rates_pct": float(100 * (r < 0).mean())},
-                "deposit_deviation_pct_y3": {"mean": float(100 * dev[:, -1].mean()), "p05": float(100 * np.percentile(dev[:, -1], 5)),
-                                             "p95": float(100 * np.percentile(dev[:, -1], 95))}}
+        return {
+            "label": label,
+            "params": ou,
+            "ear": _earnings_at_risk(ann, base_ann),
+            "_ann": ann,
+            "_base_ann": base_ann,
+            "short_rate_pct": {
+                "mean_by_year": [float(100 * r[:, k * 12].mean()) for k in (1, 2, 3)],
+                "p05_y3": float(100 * np.percentile(r[:, 36], 5)),
+                "p95_y3": float(100 * np.percentile(r[:, 36], 95)),
+                "share_negative_rates_pct": float(100 * (r < 0).mean()),
+            },
+            "deposit_deviation_pct_y3": {
+                "mean": float(100 * dev[:, -1].mean()),
+                "p05": float(100 * np.percentile(dev[:, -1], 5)),
+                "p95": float(100 * np.percentile(dev[:, -1], 95)),
+            },
+        }
 
     hist = m["tb3ms"].dropna()
     cal_main = calibrate_ou(hist.loc["1990-01-01":])
@@ -231,8 +282,15 @@ def run(n_paths: int = N_PATHS) -> dict[str, Any]:
         if n > n_paths:
             continue
         e = _earnings_at_risk(ann[:n], base_ann)
-        conv.append({"n_paths": n, "EaR95_year1_pct": e["year1"]["EaR95_pct_base"], "EaR99_year1_pct": e["year1"]["EaR99_pct_base"],
-                     "EaR95_cum3y_pct": e["cumulative_3y"]["EaR95_pct_base"], "EaR99_cum3y_pct": e["cumulative_3y"]["EaR99_pct_base"]})
+        conv.append(
+            {
+                "n_paths": n,
+                "EaR95_year1_pct": e["year1"]["EaR95_pct_base"],
+                "EaR99_year1_pct": e["year1"]["EaR99_pct_base"],
+                "EaR95_cum3y_pct": e["cumulative_3y"]["EaR95_pct_base"],
+                "EaR99_cum3y_pct": e["cumulative_3y"]["EaR99_pct_base"],
+            }
+        )
     rng = np.random.default_rng(1)
     boot = []
     for _ in range(300):
@@ -243,13 +301,19 @@ def run(n_paths: int = N_PATHS) -> dict[str, Any]:
     np.save(PROCESSED / "mc_nii_base.npy", base_ann)
     pd.DataFrame(conv).to_parquet(PROCESSED / "mc_convergence.parquet")
     out = {
-        "n_paths": n_paths, "n_months": T_MONTHS, "seed": SEED, "antithetic": True, "runtime_seconds": time.time() - t0,
-        "calibration": {"main": cal_main, "alt_pre_gfc": cal_alt}, "martingale_check_5y": check,
+        "n_paths": n_paths,
+        "n_months": T_MONTHS,
+        "seed": SEED,
+        "antithetic": True,
+        "runtime_seconds": time.time() - t0,
+        "calibration": {"main": cal_main, "alt_pre_gfc": cal_alt},
+        "martingale_check_5y": check,
         "deposit_arx": arx,
         "hull_white": {k: v for k, v in hw.items() if not k.startswith("_")},
         "hull_white_alt_calibration": {k: v for k, v in hw_alt.items() if not k.startswith("_")},
         "vasicek_benchmark": {k: v for k, v in vas.items() if not k.startswith("_")},
-        "convergence": conv, "ear95_year1_bootstrap_se_bn": float(np.std(boot)),
+        "convergence": conv,
+        "ear95_year1_bootstrap_se_bn": float(np.std(boot)),
         "note": "EaR = base-path NII minus the (1-p) percentile of simulated NII; positive = shortfall. Illustrative bank.",
     }
     update_summary("monte_carlo", out)

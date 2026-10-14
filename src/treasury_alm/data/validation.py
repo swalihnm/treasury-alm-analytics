@@ -1,4 +1,5 @@
 """Data validation with pandera (Polars backend) plus gap / break reporting."""
+
 from __future__ import annotations
 
 from typing import Any

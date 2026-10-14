@@ -10,7 +10,15 @@ from treasury_alm.irrbb.config import load_basel
 from treasury_alm.irrbb.eve import EVECalculator
 from treasury_alm.irrbb.outlier_test import IRRBBEngine, Overrides
 from treasury_alm.irrbb.products import BaseProduct, Context
-from treasury_alm.irrbb.shocks import FloorPolicy, Parallel, Short, apply_shock, flattener, standard_scenarios, steepener
+from treasury_alm.irrbb.shocks import (
+    FloorPolicy,
+    Parallel,
+    Short,
+    apply_shock,
+    flattener,
+    standard_scenarios,
+    steepener,
+)
 
 BASEL = load_basel()
 CURVE = ZeroCurve.from_nss(NSSParams(4.5, -1.0, 1.0, 0.5, 1.5, 7.0))
@@ -30,8 +38,12 @@ def test_short_shock_decays_to_zero_and_is_monotone(size):
     assert s[0] > 0.99 * size
 
 
-@given(mode=st.sampled_from(["none", "zero", "maturity_dependent"]), size=st.floats(10, 800), sign=st.sampled_from([-1, 1]),
-       base=st.floats(-0.5, 8))
+@given(
+    mode=st.sampled_from(["none", "zero", "maturity_dependent"]),
+    size=st.floats(10, 800),
+    sign=st.sampled_from([-1, 1]),
+    base=st.floats(-0.5, 8),
+)
 @settings(max_examples=60)
 def test_floor_respected(mode, size, sign, base):
     fl = FloorPolicy(mode, -1.0, 20.0)

@@ -11,3 +11,5 @@ mlruns/
 .coverage
 *.egg-info/
 mlflow.db
+cov.json
+junit.xml

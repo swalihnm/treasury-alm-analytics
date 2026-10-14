@@ -7,6 +7,7 @@ Policy-rate features use the *previous* month's average so a week never sees a m
 not finished (no leakage). Loss is masked MSE so recent origins with unresolved long horizons
 still train the short heads. Seeds are fixed and op-determinism enabled.
 """
+
 from __future__ import annotations
 
 import os
@@ -18,6 +19,7 @@ import numpy as np
 import pandas as pd
 import polars as pl
 import tensorflow as tf
+from numpy.typing import NDArray
 
 from ... import PROCESSED
 from ..features import HORIZONS
@@ -52,8 +54,8 @@ class LSTMForecaster(BaseForecaster):
         self.history: dict[str, list[float]] = {}
 
     # ---- helpers -------------------------------------------------------------------------
-    def _x(self) -> np.ndarray:
-        return self.wf[["wg", "ff", "dff3"]].values.astype("float32")
+    def _x(self) -> NDArray[np.float32]:
+        return np.asarray(self.wf[["wg", "ff", "dff3"]].values, dtype=np.float32)
 
     def _y(self) -> tuple[np.ndarray, np.ndarray]:
         lA = np.log(self.wf["A"].values)
@@ -67,7 +69,7 @@ class LSTMForecaster(BaseForecaster):
         return np.column_stack(ys), np.column_stack(ms)
 
     def _seqs(self, xs: np.ndarray, idx: np.ndarray) -> np.ndarray:
-        return np.stack([xs[i - SEQ + 1: i + 1] for i in idx])
+        return np.stack([xs[i - SEQ + 1 : i + 1] for i in idx])
 
     def _build(self) -> tf.keras.Model:
         tf.keras.utils.set_random_seed(self.seed)
@@ -82,7 +84,7 @@ class LSTMForecaster(BaseForecaster):
         m = tf.keras.Model(inp, out)
 
         def masked_mse(yt: tf.Tensor, yp: tf.Tensor) -> tf.Tensor:
-            y, mask = yt[:, : len(HORIZONS)], yt[:, len(HORIZONS):]
+            y, mask = yt[:, : len(HORIZONS)], yt[:, len(HORIZONS) :]
             return tf.reduce_sum(mask * tf.square(y - yp)) / (tf.reduce_sum(mask) + 1e-8)
 
         m.compile(tf.keras.optimizers.Adam(1e-3), loss=masked_mse)
@@ -98,7 +100,7 @@ class LSTMForecaster(BaseForecaster):
         Y, M = self._y()
         # targets must resolve by the cutoff week
         for j, h in enumerate(HORIZONS):
-            M[max(0, n_cut - WEEKS[h]):, j] = False
+            M[max(0, n_cut - WEEKS[h]) :, j] = False
         Y = np.where(M, Y, 0.0)
         self._ysd = np.array([Y[M[:, j], j].std() + 1e-6 for j in range(len(HORIZONS))])
         idx = np.arange(SEQ - 1, n_cut)
@@ -108,8 +110,16 @@ class LSTMForecaster(BaseForecaster):
         nval = max(int(0.15 * len(idx)), 50)
         self.model = self._build()
         cb = tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=8, restore_best_weights=True)
-        h = self.model.fit(X[:-nval], yt[:-nval], validation_data=(X[-nval:], yt[-nval:]), epochs=self.epochs,
-                           batch_size=64, shuffle=False, callbacks=[cb], verbose=0)
+        h = self.model.fit(
+            X[:-nval],
+            yt[:-nval],
+            validation_data=(X[-nval:], yt[-nval:]),
+            epochs=self.epochs,
+            batch_size=64,
+            shuffle=False,
+            callbacks=[cb],
+            verbose=0,
+        )
         self.history = {k: [float(v) for v in vs] for k, vs in h.history.items()}
         return self
 

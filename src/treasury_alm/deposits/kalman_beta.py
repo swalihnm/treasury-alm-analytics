@@ -11,6 +11,7 @@ The smoothed (two-sided) path is for history; the filtered (one-sided) path is w
 in real time. Variances are estimated by maximum likelihood. Compare with
 `betas.rolling_beta`, a window estimator, for robustness.
 """
+
 from __future__ import annotations
 
 import warnings
@@ -75,7 +76,10 @@ def fit_tv_beta(dep: pd.Series, ff: pd.Series) -> dict[str, Any]:
     filt = pd.Series(res.filtered_state[0], z.index, name="beta_filtered")
     se = pd.Series(np.sqrt(res.smoothed_state_cov[0, 0]), z.index, name="se")
     return {
-        "smoothed": smooth.iloc[burn:], "filtered": filt.iloc[burn:], "smoothed_se": se.iloc[burn:],
-        "params": dict(zip(mod.param_names, [float(p) for p in res.params])), "loglike": float(res.llf),
+        "smoothed": smooth.iloc[burn:],
+        "filtered": filt.iloc[burn:],
+        "smoothed_se": se.iloc[burn:],
+        "params": dict(zip(mod.param_names, [float(p) for p in res.params])),
+        "loglike": float(res.llf),
         "converged": bool(res.mle_retvals.get("converged", True)) if res.mle_retvals else True,
     }

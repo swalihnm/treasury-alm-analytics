@@ -7,6 +7,7 @@ the margin because assets reprice faster than funding.
 Cycle identification is algorithmic (zig-zag on FEDFUNDS) so the dates are reproducible and
 checked against the known cycles rather than hand-picked.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -116,7 +117,9 @@ def cycle_beta(dep: pd.Series, ff: pd.Series, c: Cycle, lag: int = 0) -> dict[st
     return {"delta_policy_pp": df_, "delta_deposit_pp": dd, "beta": dd / df_}
 
 
-def cycle_table(monthly: pd.DataFrame, cycles: list[Cycle], products: dict[str, str], lags: tuple[int, ...] = (0, 3, 6)) -> list[dict[str, Any]]:
+def cycle_table(
+    monthly: pd.DataFrame, cycles: list[Cycle], products: dict[str, str], lags: tuple[int, ...] = (0, 3, 6)
+) -> list[dict[str, Any]]:
     rows = []
     ff = monthly["fedfunds"]
     for c in cycles:
@@ -125,8 +128,17 @@ def cycle_table(monthly: pd.DataFrame, cycles: list[Cycle], products: dict[str, 
             for lag in lags:
                 r = cycle_beta(dep, ff, c, lag)
                 if r is not None:
-                    rows.append({"cycle": c.label, "kind": c.kind, "ongoing": c.ongoing, "product": name,
-                                 "regime": "old" if col.endswith("_old") else "new", "lag_months": lag, **r})
+                    rows.append(
+                        {
+                            "cycle": c.label,
+                            "kind": c.kind,
+                            "ongoing": c.ongoing,
+                            "product": name,
+                            "regime": "old" if col.endswith("_old") else "new",
+                            "lag_months": lag,
+                            **r,
+                        }
+                    )
     return rows
 
 
@@ -139,7 +151,7 @@ def rolling_beta(dep: pd.Series, ff: pd.Series, window: int = 36, horizon: int =
     df_ = pd.concat([dep.diff(horizon), ff.diff(horizon)], axis=1, keys=["d", "f"]).dropna()
     out = {}
     for i in range(window, len(df_) + 1):
-        w = df_.iloc[i - window:i]
+        w = df_.iloc[i - window : i]
         vx = float((w["f"] ** 2).sum())
         out[w.index[-1]] = float((w["f"] * w["d"]).sum() / vx) if vx > 1e-6 else np.nan
     return pd.Series(out, name="rolling_beta")
@@ -168,21 +180,30 @@ def asymmetric_beta(dep: pd.Series, ff: pd.Series, n_lags: int = 6, maxlags: int
     t_up, t_dn = res.t_test(R_up), res.t_test(R_dn)
     diff = res.t_test(R_up - R_dn)
     return {
-        "n_obs": int(res.nobs), "up_beta": float(t_up.effect[0]), "up_se": float(t_up.sd[0, 0]),
-        "down_beta": float(t_dn.effect[0]), "down_se": float(t_dn.sd[0, 0]),
-        "diff_up_minus_down": float(diff.effect[0]), "p_value_equal": float(diff.pvalue),
-        "n_up_months": int((df > 0).sum()), "n_down_months": int((df < 0).sum()),
+        "n_obs": int(res.nobs),
+        "up_beta": float(t_up.effect[0]),
+        "up_se": float(t_up.sd[0, 0]),
+        "down_beta": float(t_dn.effect[0]),
+        "down_se": float(t_dn.sd[0, 0]),
+        "diff_up_minus_down": float(diff.effect[0]),
+        "p_value_equal": float(diff.pvalue),
+        "n_up_months": int((df > 0).sum()),
+        "n_down_months": int((df < 0).sum()),
     }
 
 
-def level_dependence(dep: pd.Series, ff: pd.Series, horizon: int = 6, split: float = 1.0, maxlags: int = 6) -> dict[str, Any]:
+def level_dependence(
+    dep: pd.Series, ff: pd.Series, horizon: int = 6, split: float = 1.0, maxlags: int = 6
+) -> dict[str, Any]:
     """Does beta rise with the rate level ('beta convexity')?
 
     (1) Split-sample betas of horizon-changes for policy level < split vs >= split;
     (2) interaction regression d(dep) = b0*d(ff) + b1*d(ff)*level_{t-h} + e, HAC errors.
     """
     df_ = pd.concat([dep, ff], axis=1, keys=["d", "f"]).dropna()
-    z = pd.DataFrame({"dd": df_["d"].diff(horizon), "df": df_["f"].diff(horizon), "lvl": df_["f"].shift(horizon)}).dropna()
+    z = pd.DataFrame(
+        {"dd": df_["d"].diff(horizon), "df": df_["f"].diff(horizon), "lvl": df_["f"].shift(horizon)}
+    ).dropna()
     z = z[z["df"].abs() > 0.0]
     out: dict[str, Any] = {}
     for name, sub in (("low", z[z["lvl"] < split]), ("high", z[z["lvl"] >= split])):

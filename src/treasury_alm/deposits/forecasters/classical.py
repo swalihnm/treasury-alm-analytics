@@ -1,4 +1,5 @@
 """Baselines, SARIMAX and LightGBM forecasters (monthly)."""
+
 from __future__ import annotations
 
 import warnings
@@ -109,9 +110,19 @@ class LightGBMForecaster(BaseForecaster):
             lastorigin = cutoff - pd.DateOffset(months=h)
             idx = df.loc[:lastorigin].dropna(subset=["g_m12", "dff12"]).index
             y = T.loc[idx, h].dropna()
-            m = lgb.LGBMRegressor(n_estimators=250, learning_rate=0.03, num_leaves=4, min_child_samples=15,
-                                  subsample=0.8, subsample_freq=1, colsample_bytree=0.8, reg_lambda=5.0,
-                                  random_state=self.seed, verbose=-1, n_jobs=1)
+            m = lgb.LGBMRegressor(
+                n_estimators=250,
+                learning_rate=0.03,
+                num_leaves=4,
+                min_child_samples=15,
+                subsample=0.8,
+                subsample_freq=1,
+                colsample_bytree=0.8,
+                reg_lambda=5.0,
+                random_state=self.seed,
+                verbose=-1,
+                n_jobs=1,
+            )
             m.fit(df.loc[y.index, FEATURES], y)
             self.models[h] = m
         return self

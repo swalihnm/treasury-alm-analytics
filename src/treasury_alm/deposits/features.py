@@ -8,6 +8,7 @@ Every feature in row t uses information available at the end of month t only.
 savings series are spliced *for this feature only*; the break is documented in
 reports/data_quality.md and the two levels are within 3bp at the boundary (policy rate ~0).
 """
+
 from __future__ import annotations
 
 import numpy as np

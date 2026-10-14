@@ -17,6 +17,7 @@ Detectors
 Event list is fixed here, BEFORE looking at detector output (rationale in the comments). Only 3
 events exist, so precision/recall are coarse and reported with the raw counts.
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -34,8 +35,18 @@ from ..results import update_summary
 # literature / Fed H.8 commentary; chosen a priori.
 EVENTS = [
     ("lehman_flight_to_safety", "2008-09-15", "2008-11-30", "Lehman failure; flight to insured deposits"),
-    ("pandemic_inflows", "2020-03-11", "2020-06-30", "COVID-19 stimulus and precautionary saving: record deposit inflows"),
-    ("regional_bank_stress", "2023-03-08", "2023-04-19", "SVB/Signature failures: small-bank outflows, large-bank inflows"),
+    (
+        "pandemic_inflows",
+        "2020-03-11",
+        "2020-06-30",
+        "COVID-19 stimulus and precautionary saving: record deposit inflows",
+    ),
+    (
+        "regional_bank_stress",
+        "2023-03-08",
+        "2023-04-19",
+        "SVB/Signature failures: small-bank outflows, large-bank inflows",
+    ),
 ]
 EVAL_START = "2008-01-01"
 Z_THRESH = 4.0
@@ -94,11 +105,14 @@ def evaluate(flags: pd.Series, name: str) -> dict[str, Any]:
     grace = pd.Timedelta(weeks=GRACE_WEEKS)
     det: dict[str, Any] = {}
     for n, a, b in wins:
-        hit = f.loc[a - grace: b]
+        hit = f.loc[a - grace : b]
         first = hit[hit].index.min() if hit.any() else None
-        det[n] = {"detected": bool(hit.any()), "n_flagged_weeks": int(hit.sum()),
-                  "first_flag": None if first is None else str(first.date()),
-                  "lead_lag_weeks": None if first is None else int((first - a).days / 7)}
+        det[n] = {
+            "detected": bool(hit.any()),
+            "n_flagged_weeks": int(hit.sum()),
+            "first_flag": None if first is None else str(first.date()),
+            "lead_lag_weeks": None if first is None else int((first - a).days / 7),
+        }
     in_event = pd.Series(False, f.index)
     near_event = pd.Series(False, f.index)
     for _, a, b in wins:
@@ -109,11 +123,16 @@ def evaluate(flags: pd.Series, name: str) -> dict[str, Any]:
     calm = f[~near_event]
     years_calm = len(calm) / 52.0
     return {
-        "detector": name, "events": det, "n_events": len(wins), "events_detected": int(sum(d["detected"] for d in det.values())),
+        "detector": name,
+        "events": det,
+        "n_events": len(wins),
+        "events_detected": int(sum(d["detected"] for d in det.values())),
         "recall": float(np.mean([d["detected"] for d in det.values()])),
-        "n_episodes": len(eps), "n_episodes_in_events": int(tp),
+        "n_episodes": len(eps),
+        "n_episodes_in_events": int(tp),
         "precision_episodes": float(tp / len(eps)) if eps else float("nan"),
-        "false_alarm_weeks_per_year_calm": float(calm.sum() / years_calm), "calm_years": float(years_calm),
+        "false_alarm_weeks_per_year_calm": float(calm.sum() / years_calm),
+        "calm_years": float(years_calm),
         "flagged_weeks_total": int(f.sum()),
     }
 
@@ -131,20 +150,36 @@ def run() -> dict[str, Any]:
     cps = pelt_changepoints(zmax)
     cp_flag = pd.Series(False, zmax.index)
     for c in cps:
-        cp_flag.loc[c - pd.Timedelta(weeks=2): c + pd.Timedelta(weeks=2)] = True
+        cp_flag.loc[c - pd.Timedelta(weeks=2) : c + pd.Timedelta(weeks=2)] = True
     flags["pelt_changepoint"] = cp_flag
     flags = {k: v.reindex(zmax.index, fill_value=False) for k, v in flags.items()}
     results = {k: evaluate(v, k) for k, v in flags.items()}
     # threshold sensitivity for the robust-z detector (so the chosen 4.0 is not cherry-picked)
     sens = {str(t): evaluate(zmax > t, f"z>{t}") for t in (3.0, 4.0, 5.0, 6.0)}
-    sens = {t: {k: r[k] for k in ("recall", "precision_episodes", "false_alarm_weeks_per_year_calm", "n_episodes")} for t, r in sens.items()}
+    sens = {
+        t: {k: r[k] for k in ("recall", "precision_episodes", "false_alarm_weeks_per_year_calm", "n_episodes")}
+        for t, r in sens.items()
+    }
     # Module-4 residual layer (monthly)
     m4 = _module4_residuals()
-    out = {"events": [{"name": n, "start": a, "end": b, "rationale": r} for n, a, b, r in EVENTS],
-           "params": {"z_threshold": Z_THRESH, "eval_start": EVAL_START, "iforest_train_end": IF_TRAIN_END, "grace_weeks": GRACE_WEEKS},
-           "detectors": results, "z_threshold_sensitivity": sens, "pelt_changepoints": [str(c.date()) for c in cps if c >= pd.Timestamp(EVAL_START)],
-           "module4_residuals": m4}
-    flag_df = pd.DataFrame(flags).assign(z_large=z["large"], z_small=z["small"], g_large=g["large"], g_small=g["small"]).reset_index()
+    out = {
+        "events": [{"name": n, "start": a, "end": b, "rationale": r} for n, a, b, r in EVENTS],
+        "params": {
+            "z_threshold": Z_THRESH,
+            "eval_start": EVAL_START,
+            "iforest_train_end": IF_TRAIN_END,
+            "grace_weeks": GRACE_WEEKS,
+        },
+        "detectors": results,
+        "z_threshold_sensitivity": sens,
+        "pelt_changepoints": [str(c.date()) for c in cps if c >= pd.Timestamp(EVAL_START)],
+        "module4_residuals": m4,
+    }
+    flag_df = (
+        pd.DataFrame(flags)
+        .assign(z_large=z["large"], z_small=z["small"], g_large=g["large"], g_small=g["small"])
+        .reset_index()
+    )
     flag_df.to_parquet(PROCESSED / "anomaly_flags.parquet")
     update_summary("anomalies", out)
     return out
@@ -155,8 +190,15 @@ def _module4_residuals(thr: float = 3.0) -> dict[str, Any]:
     t = pd.read_parquet(PROCESSED / "deposit_truth.parquet").set_index("date")
     e = p[p["model"] == "ensemble"].set_index("origin")["1"]
     err = (t["1"].reindex(e.index) - e).dropna()  # realised minus forecast, 1-month horizon
-    z = (err - err.rolling(36).median().shift(1)) / (1.4826 * err.sub(err.rolling(36).median().shift(1)).abs().rolling(36).median().shift(1))
+    z = (err - err.rolling(36).median().shift(1)) / (
+        1.4826 * err.sub(err.rolling(36).median().shift(1)).abs().rolling(36).median().shift(1)
+    )
     fl = z.abs() > thr
     months = [str(d.date())[:7] for d in z[fl].index]
-    return {"threshold": thr, "flagged_months": months, "flags_2020_03_to_06": [m for m in months if "2020-03" <= m <= "2020-06"],
-            "flags_2023_03_to_04": [m for m in months if "2023-03" <= m <= "2023-04"], "n_months_scored": int(z.notna().sum())}
+    return {
+        "threshold": thr,
+        "flagged_months": months,
+        "flags_2020_03_to_06": [m for m in months if "2020-03" <= m <= "2020-06"],
+        "flags_2023_03_to_04": [m for m in months if "2023-03" <= m <= "2023-04"],
+        "n_months_scored": int(z.notna().sum()),
+    }

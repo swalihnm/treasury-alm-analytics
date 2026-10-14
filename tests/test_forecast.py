@@ -28,7 +28,7 @@ def test_no_lookahead(frame, model):
     origin = pd.DatetimeIndex([pd.Timestamp(2016, 6, 1)])
     model.fit(frame, cutoff)
     full = model.predict(frame, origin)
-    trunc = model.predict(frame.loc[:origin[0]], origin)
+    trunc = model.predict(frame.loc[: origin[0]], origin)
     np.testing.assert_allclose(full.values, trunc.values, rtol=1e-8, atol=1e-8)
 
 
@@ -55,7 +55,10 @@ def test_ensemble_weights_sum_to_one(frame):
     T = targets(frame)
     idx = frame.loc["2012-01-01":"2017-12-01"].index
     rng = np.random.default_rng(1)
-    preds = {c: pd.DataFrame({h: T.loc[idx, h] + rng.normal(0, s, len(idx)) for h in HORIZONS}) for c, s in (("a", 0.2), ("b", 0.5))}
+    preds = {
+        c: pd.DataFrame({h: T.loc[idx, h] + rng.normal(0, s, len(idx)) for h in HORIZONS})
+        for c, s in (("a", 0.2), ("b", 0.5))
+    }
     ens = ensemble_from_warmup(preds, T, ["a", "b"])
     for h in HORIZONS:
         w = ens.attrs["weights"][h]

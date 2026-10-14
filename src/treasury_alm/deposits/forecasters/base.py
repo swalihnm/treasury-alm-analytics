@@ -4,6 +4,7 @@ All forecasters predict r_{t,h} (h-month cumulative log growth, %) for a set of 
 Leakage rule: `predict` may only read rows of `df` up to and including each origin; the test
 suite checks this by truncating `df` after the origin and asserting identical output.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -32,7 +33,9 @@ class BaseForecaster(ABC):
         """Per-horizon absolute out-of-sample residuals (already resolved at forecast time)."""
         self._calib = abs_resid
 
-    def predict_interval(self, df: pd.DataFrame, origins: pd.DatetimeIndex, level: float = 0.8) -> dict[int, pd.DataFrame]:
+    def predict_interval(
+        self, df: pd.DataFrame, origins: pd.DatetimeIndex, level: float = 0.8
+    ) -> dict[int, pd.DataFrame]:
         """Split-conformal intervals: point +/- the ceil((n+1)*level)-th smallest calibration |residual|."""
         pred = self.predict(df, origins)
         out: dict[int, pd.DataFrame] = {}

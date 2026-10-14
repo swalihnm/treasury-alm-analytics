@@ -1262,6 +1262,15 @@
     "validation": "passed",
     "vintage_date": "2026-10-14"
   },
+  "engineering": {
+    "coverage_pct": 97.07652622527945,
+    "failures": 0,
+    "mypy_strict_exit_code": 0,
+    "pytest_exit_code": 0,
+    "ruff_exit_code": 0,
+    "skipped": 0,
+    "tests_collected": 66
+  },
   "forecasting": {
     "ensemble_weights": {
       "1": {
@@ -2895,6 +2904,82 @@
     "tier1_bn": 9.0,
     "worst_delta_eve_pct_tier1": -41.57613252530451,
     "worst_scenario": "parallel_up"
+  },
+  "monitoring": {
+    "beta_stability": {
+      "cd12_new": {
+        "36m_earlier": 0.271276688918958,
+        "latest": 0.15656632982417468,
+        "relative_change": 0.42285372750569156,
+        "status": "GREEN"
+      },
+      "cd12_old": {
+        "36m_earlier": 0.27245054447255607,
+        "latest": 0.08043768280514053,
+        "relative_change": 0.7047622607586934,
+        "status": "AMBER"
+      },
+      "money_market_old": {
+        "36m_earlier": 0.047319393132974626,
+        "latest": 0.02668148265037186,
+        "relative_change": 0.4361406416309509,
+        "status": "GREEN"
+      },
+      "savings_new": {
+        "36m_earlier": 0.06601325833958642,
+        "latest": 0.03704133133563732,
+        "relative_change": 0.43888042694258883,
+        "status": "GREEN"
+      },
+      "savings_old": {
+        "36m_earlier": 0.006423827731063234,
+        "latest": 0.018936636384733314,
+        "relative_change": 1.9478742546539356,
+        "status": "RED"
+      }
+    },
+    "forecast_error": {
+      "as_of": "2026-06-01",
+      "latest_rolling_12m_mase_h3": 0.3654539845943363,
+      "max_at": "2020-07-01",
+      "max_rolling_mase_h3": 2.3615723507979567,
+      "status": "GREEN"
+    },
+    "input_drift": {
+      "dff12": {
+        "psi": 2.3142942499773893,
+        "status": "RED"
+      },
+      "dff3": {
+        "psi": 2.9045679543350365,
+        "status": "RED"
+      },
+      "ff": {
+        "psi": 5.934036762378579,
+        "status": "RED"
+      },
+      "g": {
+        "psi": 2.0652504405764294,
+        "status": "RED"
+      },
+      "g_m12": {
+        "psi": 5.1730077152191605,
+        "status": "RED"
+      },
+      "slope": {
+        "psi": 5.872271863783918,
+        "status": "RED"
+      }
+    },
+    "recalibration_trigger": "any RED, or AMBER on two consecutive monthly runs",
+    "thresholds": {
+      "beta_rel_amber": 0.5,
+      "beta_rel_red": 1.0,
+      "mase_amber": 0.8,
+      "mase_red": 1.0,
+      "psi_amber": 0.1,
+      "psi_red": 0.25
+    }
   },
   "monte_carlo": {
     "antithetic": true,

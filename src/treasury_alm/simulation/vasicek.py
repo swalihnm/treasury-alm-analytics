@@ -3,6 +3,7 @@
 Used only as a simpler benchmark for Hull-White: it ignores today's curve (rates drift toward b), so
 its NII distribution is centred differently, which is exactly why Hull-White is preferred for EaR.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -39,4 +40,4 @@ class Vasicek:
         a, b, s = self.a, self.b, self.sigma
         B = (1 - np.exp(-a * tenor)) / a
         lnA = (B - tenor) * (a**2 * b - s**2 / 2) / a**2 - s**2 * B**2 / (4 * a)
-        return -(lnA - B * r) / tenor * 100.0
+        return np.asarray(-(lnA - B * r) / tenor * 100.0, dtype=np.float64)

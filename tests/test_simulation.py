@@ -57,6 +57,6 @@ def test_vasicek_zero_rate_limits():
 def test_ladder_rates_matches_closed_form():
     new = np.full((1, 36), 6.0)
     out = _ladder_rates(4.0, new, 12, 24)
-    assert out[0, 0] == pytest.approx(4.0)             # month 1: nothing repriced yet
+    assert out[0, 0] == pytest.approx(4.0)  # month 1: nothing repriced yet
     assert out[0, 6] == pytest.approx(4.0 + 2.0 * 6 / 12)
-    assert out[0, 20] == pytest.approx(6.0)            # fully rolled after n months
+    assert out[0, 20] == pytest.approx(6.0)  # fully rolled after n months

@@ -5,6 +5,7 @@ period average too (a monthly average-of-weeks is how the Fed's monthly series i
 Monthly dates are stamped on the first day of the month (FRED convention); `month_end` is
 provided for as-of joins.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -33,14 +34,20 @@ def to_monthly(lf: pl.LazyFrame, how: str = "mean") -> pl.LazyFrame:
     """Aggregate to calendar months stamped on the first day. how: mean | last | sum."""
     return (
         lf.with_columns(pl.col("date").dt.truncate("1mo").alias("m"))
-        .group_by("m").agg(_agg(how).alias("value")).rename({"m": "date"}).sort("date")
+        .group_by("m")
+        .agg(_agg(how).alias("value"))
+        .rename({"m": "date"})
+        .sort("date")
     )
 
 
 def to_quarterly(lf: pl.LazyFrame, how: str = "mean") -> pl.LazyFrame:
     return (
         lf.with_columns(pl.col("date").dt.truncate("1q").alias("q"))
-        .group_by("q").agg(_agg(how).alias("value")).rename({"q": "date"}).sort("date")
+        .group_by("q")
+        .agg(_agg(how).alias("value"))
+        .rename({"q": "date"})
+        .sort("date")
     )
 
 

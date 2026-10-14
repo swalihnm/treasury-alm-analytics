@@ -1,4 +1,5 @@
 """Loaders for the Basel parameter file, the illustrative balance sheet and the measured deposit betas."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -36,12 +37,15 @@ def load_basel(path: Path = CONFIG / "irrbb_basel.yaml") -> BaselParams:
     c = yaml.safe_load(path.read_text())
     fl = c["rate_floor"]
     return BaselParams(
-        upper=np.array(c["time_buckets"]["upper"], dtype=float), midpoints=np.array(c["time_buckets"]["midpoints"], dtype=float),
-        shock_sizes=c["shock_sizes_bp"], decay_x=float(c["shock_shape"]["decay_x"]),
+        upper=np.array(c["time_buckets"]["upper"], dtype=float),
+        midpoints=np.array(c["time_buckets"]["midpoints"], dtype=float),
+        shock_sizes=c["shock_sizes_bp"],
+        decay_x=float(c["shock_shape"]["decay_x"]),
         steepener=(c["shock_shape"]["steepener"]["short"], c["shock_shape"]["steepener"]["long"]),
         flattener=(c["shock_shape"]["flattener"]["short"], c["shock_shape"]["flattener"]["long"]),
         floor=FloorPolicy(fl["mode"], fl["immediate_floor_pct"], fl["floor_end_years"]),
-        caps=c["core_deposit_caps"], outlier_pct=float(c["outlier_test"]["threshold_pct_of_tier1"]),
+        caps=c["core_deposit_caps"],
+        outlier_pct=float(c["outlier_test"]["threshold_pct_of_tier1"]),
     )
 
 

@@ -1,0 +1,29 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests
+      - run: ruff format --check src tests
+      - run: mypy src/treasury_alm
+      # Integration tests need processed data. Add a repo secret FRED_API_KEY; without it they are skipped
+      # (and the coverage gate below will fail, which is intended: unit-only coverage is ~50%).
+      - name: Build data
+        if: env.FRED_API_KEY != ''
+        run: |
+          python -m treasury_alm.cli data
+          python -m treasury_alm.cli curves
+          python -m treasury_alm.cli betas
+          python -m treasury_alm.cli backtest --no-track
+          python -m treasury_alm.cli nii
+          python -m treasury_alm.cli montecarlo
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      - run: pytest --cov=treasury_alm --cov-fail-under=85
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
